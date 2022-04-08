@@ -1,0 +1,10 @@
+{
+  "typescript.extension.sortImports.bracketWhitespace": false,
+  "typescript.extension.sortImports.enableJavascript": false,
+  "javascript.format.enable": false,
+  "javascript.format.insertSpaceAfterConstructor": false,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false
+}
