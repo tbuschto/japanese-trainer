@@ -261,16 +261,8 @@
       "warn"
     ],
     "@typescript-eslint/explicit-function-return-type": [
-      "warn",
-      {
-        "allowExpressions": true,
-        "allowTypedFunctionExpressions": true,
-        "allowHigherOrderFunctions": true,
-        "allowDirectConstAssertionInArrowFunctions": true,
-        "allowConciseArrowFunctionExpressionsStartingWithVoid": true
-      }
+      "off"
     ],
-    "@typescript-eslint/explicit-module-boundary-types": "warn",
     "@typescript-eslint/adjacent-overload-signatures": "warn",
     "@typescript-eslint/array-type": [
       "warn",
@@ -338,30 +330,6 @@
             }
           }
         }
-      }
-    ],
-    "@typescript-eslint/member-ordering": [
-      "warn",
-      {
-        "default": [
-          "public-static-field",
-          "protected-static-field",
-          "private-static-field",
-          "public-static-method",
-          "public-field",
-          "protected-field",
-          "private-field",
-          "constructor",
-          "public-abstract-method",
-          "public-instance-method",
-          "protected-abstract-method",
-          "protected-instance-method",
-          "private-abstract-method",
-          "private-instance-method",
-          "signature",
-          "protected-static-method",
-          "private-static-method"
-        ]
       }
     ],
     "@typescript-eslint/no-empty-function": "warn",
@@ -454,7 +422,7 @@
     ],
     "import/default": "off",
     "import/no-relative-parent-imports": "warn",
-    "import/named": "warn",
+    "import/named": "off",
     "import/no-useless-path-segments": "warn",
     "import/no-cycle": "warn",
     "import/order": [

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {writeFileSync, readFileSync} from 'fs';
 import {Parser} from 'xml2js';
+import type {JTDict, JTDictEntry, JTDictReadingInfo} from '@core';
 
 type JMdict = Entry[];
 
@@ -201,14 +202,6 @@ type Sense = Readonly<{
 }>;
 
 /**
- * These elements highlight particular target-language words which
- * are strongly associated with the Japanese word. The purpose is to
- * establish a set of target-language words which can effectively be
- * used as head-words in a reverse target-language/Japanese relationship.
- */
-type Pri = string;
-
-/**
  * The example elements contain a Japanese sentence using the term
  * associated with the entry, and one or more translations of that sentence.
  * Within the element, the ex_srce element will indicate the source of the
@@ -236,7 +229,7 @@ type Gloss = string | {
   console.info('Parsing XML...');
   const xml = readFileSync('./data/JMdict_e.xml', {encoding: 'utf-8'});
   const json = await parser.parseStringPromise(xml);
-  const part = (json.jmdict.entry as JMdict).slice(0, 1000);
+  const part = (json.jmdict.entry as JMdict).slice(0, 10000);
   const dict: JTDict = {};
   part.forEach(it => {
     dict[it.ent_seq] = JTDictEntry(it);
@@ -250,31 +243,26 @@ type Gloss = string | {
   console.info('Done!');
 }().catch(ex => console.error(ex)));
 
-type JTDict = {
-  [seq: string]: JTDictEntry
-};
-
-type JTDictEntry = {
-  [reading: string]: {
-    kanji?: string,
-    meaning: string[],
-    info: string[]
-  }
-};
-
 function JTDictEntry(src: Entry): JTDictEntry {
   const result: JTDictEntry = {};
   asArray(src.sense).forEach(sense => {
-    result[reading(src, sense)] = {
-      meaning: meaning(sense),
-      info: null,
-      kanji: kanji(src, sense)
-    };
+    const reading = getReading(src, sense);
+    const readingInfo: JTDictReadingInfo = result[reading] || {meaning: []};
+    readingInfo.meaning = readingInfo.meaning.concat(getMeaning(sense));
+    const kanji = getKanji(src, sense);
+    if (kanji) {
+      if (readingInfo.kanji && (readingInfo.kanji !== kanji)) {
+        console.warn('Contradicting Kanji', src);
+      } else {
+        readingInfo.kanji = kanji;
+      }
+    }
+    result[reading] = readingInfo;
   });
   return result;
 }
 
-function meaning(sense: Sense): string[] {
+function getMeaning(sense: Sense): string[] {
   return asArray(sense.gloss).map(it => {
     if (it instanceof Object) {
       return it._;
@@ -283,28 +271,31 @@ function meaning(sense: Sense): string[] {
   });
 }
 
-function kanji(src: Entry, sense: Sense): string {
+function getKanji(src: Entry, sense: Sense): string | undefined {
   if (sense.stagk) {
     return sense.stagk;
   }
   const candidates = asArray(src.k_ele)
-    .sort((a, b) => (a.ke_pri ? 1 : 0) - (b.ke_pri ? 1 : 0));
+    .sort((a, b) => (a?.ke_pri ? 1 : 0) - (b?.ke_pri ? 1 : 0));
   return candidates.pop()?.keb;
 }
 
-function reading(src: Entry, sense: Sense): string {
+function getReading(src: Entry, sense: Sense): string {
   if (sense.stagr) {
     return sense.stagr;
   }
   const candidates = asArray(src.r_ele)
     .filter(it => !sense.stagk || !it.re_restr || (it.re_restr === sense.stagk))
     .sort((a, b) => (a.re_pri ? 1 : 0) - (b.re_pri ? 1 : 0));
-  return candidates.pop().reb;
+  return candidates.pop()?.reb || '';
 }
 
 function asArray<T>(value: (T | T[])): T[] {
+  if (!value) {
+    return [];
+  }
   if (value instanceof Array) {
-    return value;
+    return value.concat();
   }
   return [value];
 }

@@ -11,19 +11,18 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "alwaysStrict": true,
+    "strictNullChecks": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowJs": false,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "paths": {
-      "@resources": [
-        "./resources"
-      ]
-    }
+    "baseUrl": "."
   },
   "include": [
     "./scripts",
+    "./core",
+    "./nodeapp"
   ]
 }
