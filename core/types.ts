@@ -17,7 +17,8 @@ export enum Screen {
   Settings = 'SETTINGS',
   Edit = 'EDIT',
   Quiz = 'QUIZ',
-  Lookup = 'LOOKUP'
+  Lookup = 'LOOKUP',
+  Lessons = 'LESSONS'
 }
 
 export enum WordElementMode {

@@ -1,14 +1,15 @@
 import {Screen} from 'core';
 import {TextScreen} from './TextScreen';
 
-export class LookupScreen extends TextScreen {
+export class LessonsScreen extends TextScreen {
 
   protected name(): string {
-    return 'Enter Word';
+    return 'Lessons';
   }
 
   protected async print(): Promise<void> {
     await this.choice([
+      ['New', () => this.app.createNewLesson()],
       ['Back', () => this.app.setScreen(Screen.Edit)]
     ]);
   }

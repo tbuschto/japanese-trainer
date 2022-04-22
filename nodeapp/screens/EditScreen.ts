@@ -9,9 +9,9 @@ export class EditScreen extends TextScreen {
 
   protected async print(): Promise<void> {
     await this.choice([
-      ['Add Word', () => this.app.actions.setScreen(Screen.Lookup)],
-      ['Remove Word', () => this.app.actions.setScreen(Screen.Lookup)],
-      ['Back', () => this.app.actions.setScreen(Screen.Home)]
+      ['Add Word', () => this.app.setScreen(Screen.Lookup)],
+      ['Remove Word', () => this.app.setScreen(Screen.Lookup)],
+      ['Back', () => this.app.setScreen(Screen.Home)]
     ]);
   }
 

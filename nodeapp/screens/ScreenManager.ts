@@ -5,6 +5,7 @@ import {TextScreen} from './TextScreen';
 import {QuizScreen} from './QuizScreen';
 import {LookupScreen} from './LookupScreen';
 import {SettingsScreen} from './SettingsScreen';
+import {LessonsScreen} from './LessonsScreen';
 
 export class ScreenManger {
 
@@ -29,6 +30,8 @@ export class ScreenManger {
         return new LookupScreen(this.app);
       case Screen.Settings:
         return new SettingsScreen(this.app);
+      case Screen.Lessons:
+        return new LessonsScreen(this.app);
       default:
         throw new Error(`Screen ${screen} not implemented`);
     }

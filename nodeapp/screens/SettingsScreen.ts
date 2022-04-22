@@ -9,7 +9,7 @@ export class SettingsScreen extends TextScreen {
 
   protected async print(): Promise<void> {
     await this.choice([
-      ['Back', () => this.app.actions.setScreen(Screen.Home)]
+      ['Back', () => this.app.setScreen(Screen.Home)]
     ]);
   }
 
