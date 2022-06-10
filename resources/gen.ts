@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {writeFileSync, readFileSync} from 'fs';
 import {Parser} from 'xml2js';
-import type {JTDict, JTDictEntry, JTDictReadingInfo} from '@core';
+import type {JTDict, JTDictEntry, JTDictReadingInfo} from '../src/app/types';
 
 type JMdict = Entry[];
 
