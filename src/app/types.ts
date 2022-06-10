@@ -56,3 +56,12 @@ export interface AppState {
   quiz: Quiz | null;
   hint: string;
 }
+
+// https://github.com/supasate/connected-react-router/issues/570
+declare module 'connected-react-router' {
+
+  interface ConnectedRouterProps {
+    children?: JSX.Element;
+  }
+
+}

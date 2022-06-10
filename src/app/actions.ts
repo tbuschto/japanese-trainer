@@ -1,8 +1,7 @@
-import {push} from 'connected-react-router';
-import {CallHistoryMethodAction} from 'connected-react-router';
+import {push, CallHistoryMethodAction} from 'connected-react-router';
 import {ThunkAction} from 'redux-thunk';
 import {AppState, Lesson, LessonId, Lessons, Quiz, RootPath} from './types';
-import {lesson} from './views';
+import {lesson} from './selectors';
 
 export enum ActionType {
   SetCurrentLesson = 'SET_CURRENT_LESSON',
@@ -42,7 +41,7 @@ export const setCurrentLesson: CAction<LessonId> = payload =>
   ({type: ActionType.SetCurrentLesson, payload});
 
 export const setScreen: CAction<RootPath> = payload =>
-  push(payload)
+  push(payload);
 
 export const setHint: CAction<string> = payload =>
   ({type: ActionType.SetHint, payload});
@@ -53,11 +52,11 @@ export const createNewLesson: CThunk = () => (dispatch, getState) => {
     .map(id => parseInt(id, 10))
     .reduce((a, b) => Math.max(a, b), 0);
   const id = (lastId + 1).toString();
-  const lesson: Lesson = {
+  const newLesson: Lesson = {
     name: 'Lesson ' + id,
     questions: []
   };
-  dispatch(action(ActionType.SetLessons, {[id]: lesson, ...state.lessons}));
+  dispatch(action(ActionType.SetLessons, {[id]: newLesson, ...state.lessons}));
   dispatch(action(ActionType.SetCurrentLesson, id));
   dispatch(push(RootPath.Rename));
 };

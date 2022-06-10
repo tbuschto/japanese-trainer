@@ -1,6 +1,6 @@
 import {setScreen} from '../app/actions';
 import {useAppDispatch} from '../app/hooks';
-import {RootPath} from '../app/types'
+import {RootPath} from '../app/types';
 
 export function HomeScreen() {
   const dispatch = useAppDispatch();

@@ -13,5 +13,5 @@ export const NavBar = () => (
 
 const Link = ({to}: {to: RootPath}) => {
   const dispatch = useDispatch();
-  return <a onClick={() => dispatch(push(to))}>{to}</a>
+  return <a onClick={() => dispatch(push(to))}>{to}</a>;
 };
