@@ -4,13 +4,10 @@ import {combineReducers, Reducer} from 'redux';
 import {Action, ActionType} from './actions';
 import {AppState, RootPath, WordElementMode} from './types';
 
-export class AllReducer {
-
-  constructor(private history: History) {}
-
-  readonly japaneseTrainer = combineReducers<AppState, Action>(
+export function createReducer(history: History) {
+  return combineReducers<AppState, Action>(
     {
-      router: connectRouter(this.history),
+      router: connectRouter(history),
       screen: setter(ActionType.SetScreen, RootPath.Home as RootPath),
       lessons: setter(ActionType.SetLessons, {}),
       quiz: state => state || null,
@@ -22,7 +19,6 @@ export class AllReducer {
       hint: state => state || ''
     }
   );
-
 }
 
 type Setter<T> = Reducer<T, Action>;

@@ -18,3 +18,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.navBar {
+  padding: 14px;
+}
+
+.navPoint {
+  font-size: x-large;
+  padding-right: 12px;
+  cursor: pointer;
+}
+
+.navPoint:hover {
+  text-decoration: underline;
+}

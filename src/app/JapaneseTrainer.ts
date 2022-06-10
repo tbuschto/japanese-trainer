@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import {History, createBrowserHistory} from 'history';
 import {routerMiddleware} from 'connected-react-router';
 import {configureStore} from '@reduxjs/toolkit';
-import {AllReducer} from './Reducer';
+import {createReducer} from './reducers';
 import {Action, AsyncAction} from './actions';
 import {AppState} from './types';
 
@@ -19,7 +19,7 @@ export class JapaneseTrainer {
   constructor() {
     this.history = createBrowserHistory();
     this.store = configureStore({
-      reducer: new AllReducer(this.history).japaneseTrainer,
+      reducer: createReducer(this.history),
       middleware: [thunk, routerMiddleware(this.history)]
     }) as AppStore;
   }

@@ -3,15 +3,17 @@ import {useDispatch} from 'react-redux';
 import {RootPath} from '../app/types';
 
 export const NavBar = () => (
-  <div>
-    <Link to={RootPath.Lessons}/>
-    <Link to={RootPath.Quiz}/>
-    <Link to={RootPath.Settings}/>
-    <Link to={RootPath.Edit}/>
+  <div className='navBar'>
+    <NavPoint to={RootPath.Lessons}>Lessons</NavPoint>
+    <NavPoint to={RootPath.Quiz}>Quiz</NavPoint>
+    <NavPoint to={RootPath.Settings}>Settings</NavPoint>
+    <NavPoint to={RootPath.Edit}>Edit</NavPoint>
   </div>
 );
 
-const Link = ({to}: {to: RootPath}) => {
+const NavPoint = ({to, children}: {to: RootPath, children: string}) => {
   const dispatch = useDispatch();
-  return <a onClick={() => dispatch(push(to))}>{to}</a>;
+  return <span className='navPoint' onClick={() => dispatch(push(to))}>
+    {children}
+  </span>;
 };
