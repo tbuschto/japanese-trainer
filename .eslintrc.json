@@ -300,6 +300,7 @@
       }
     ],
     "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
@@ -421,7 +422,7 @@
       }
     ],
     "import/default": "off",
-    "import/no-relative-parent-imports": "warn",
+    "import/no-relative-parent-imports": "off",
     "import/named": "off",
     "import/no-useless-path-segments": "warn",
     "import/no-cycle": "warn",

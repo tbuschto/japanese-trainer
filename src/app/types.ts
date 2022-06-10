@@ -1,5 +1,9 @@
+import {RouterState} from 'connected-react-router';
+
+export type JTDictSeq = string;
+
 export type JTDict = {
-  [seq: string]: JTDictEntry
+  [seq: JTDictSeq]: JTDictEntry
 };
 
 export type JTDictEntry = {
@@ -12,13 +16,14 @@ export type JTDictReadingInfo = {
   meta?: string[]
 };
 
-export enum Screen {
-  Home = 'HOME',
-  Settings = 'SETTINGS',
-  Edit = 'EDIT',
-  Quiz = 'QUIZ',
-  Lookup = 'LOOKUP',
-  Lessons = 'LESSONS'
+export enum RootPath {
+  Home = '/',
+  Settings = '/settings',
+  Edit = '/edit',
+  Rename = '/rename',
+  Quiz = '/quiz',
+  Lookup = '/lookup',
+  Lessons = '/lessons'
 }
 
 export enum WordElementMode {
@@ -28,25 +33,26 @@ export enum WordElementMode {
 }
 
 export type LessonId = string;
-export type JPDictId = string;
 export type Kanji = string;
 export type Reading = string;
 export type Meaning = Readonly<string[]>;
 export type Lessons = {[id: string]: Lesson};
-export type Quiz = {[id: JPDictId]: boolean};
+export type Quiz = {correct: boolean[]};
 
 export interface Lesson {
   name: string;
-  content: JTDictEntry[];
+  questions: Array<{id: JTDictSeq, reading: string} | {phrase: string, translation: string}>;
 }
 
 export interface AppState {
-  screen: Screen;
+  router: RouterState<unknown>;
+  screen: RootPath;
   lessons: Lessons;
   currentLesson: LessonId | null;
-  currentQuestion: JPDictId | null;
+  currentQuestion: number;
   kanjiMode: WordElementMode;
   meaningMode: WordElementMode;
   readingMode: WordElementMode;
   quiz: Quiz | null;
+  hint: string;
 }

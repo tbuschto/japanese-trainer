@@ -1,28 +1,32 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es6",
-    "outDir": "./dist/",
+    "target": "es5",
     "lib": [
-      "es2019"
+      "dom",
+      "dom.iterable",
+      "esnext"
     ],
+    "allowJs": true,
+    "skipLibCheck": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "allowJs": false,
-    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "sourceMap": true,
-    "baseUrl": "."
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
   },
   "include": [
-    "./scripts",
-    "./core",
-    "./nodeapp"
+    "src"
   ]
 }

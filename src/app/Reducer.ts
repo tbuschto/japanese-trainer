@@ -1,20 +1,25 @@
-import {AppState, WordElementMode} from 'core';
+import {connectRouter} from 'connected-react-router';
+import {History} from 'history';
 import {combineReducers, Reducer} from 'redux';
 import {Action, ActionType} from './actions';
-import {Screen} from './types';
+import {AppState, RootPath, WordElementMode} from './types';
 
 export class AllReducer {
 
+  constructor(private history: History) {}
+
   readonly japaneseTrainer = combineReducers<AppState, Action>(
     {
-      screen: setter(ActionType.SetScreen, Screen.Home),
+      router: connectRouter(this.history),
+      screen: setter(ActionType.SetScreen, RootPath.Home as RootPath),
       lessons: setter(ActionType.SetLessons, {}),
       quiz: state => state || null,
-      currentLesson: setter(ActionType.SetCurrentLesson, null),
-      currentQuestion: state => state || null,
+      currentLesson: setter(ActionType.SetCurrentLesson, null as string | null),
+      currentQuestion: state => state || 0,
       kanjiMode: state => state || WordElementMode.Hide,
-      meaningMode: state => state || WordElementMode.Ask,
-      readingMode: state => state || WordElementMode.Show
+      meaningMode: state => state || WordElementMode.Show,
+      readingMode: state => state || WordElementMode.Ask,
+      hint: state => state || ''
     }
   );
 
