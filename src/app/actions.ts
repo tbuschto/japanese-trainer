@@ -1,7 +1,7 @@
 import {push, CallHistoryMethodAction} from 'connected-react-router';
-import {ThunkAction} from 'redux-thunk';
+import {ThunkAction, ThunkDispatch} from 'redux-thunk';
 import {AppState, Lesson, LessonId, Lessons, Quiz, RootPath} from './types';
-import {lesson} from './selectors';
+import {selectLesson} from './selectors';
 
 export enum ActionType {
   SetCurrentLesson = 'SET_CURRENT_LESSON',
@@ -20,7 +20,7 @@ type SetLessons = ActionBase<typeof ActionType.SetLessons, Lessons>;
 type SetHint = ActionBase<typeof ActionType.SetHint, string>;
 type SetQuiz = ActionBase<typeof ActionType.SetQuiz, Quiz>;
 
-export type Action = SetCurrentLesson
+export type SyncAction = SetCurrentLesson
   | CallHistoryMethodAction
   | SetLessonName
   | SetHint
@@ -31,11 +31,15 @@ export type AsyncAction<R = Promise<void> | void> = ThunkAction<
   R,
   AppState,
   void,
-  Action
+  SyncAction
 >;
 
-type CThunk<T = void> = (arg: T) => ThunkAction<void, AppState, void, Action>;
-type CAction<T> = (payload: T) => Action;
+export type Dispatch = ThunkDispatch<AppState, void, SyncAction>;
+
+type CThunk<T = void> = (arg: T) => ThunkAction<void, AppState, void, SyncAction>;
+type CAction<T> = (payload: T) => SyncAction;
+
+export type Action = SyncAction | AsyncAction;
 
 export const setCurrentLesson: CAction<LessonId> = payload =>
   ({type: ActionType.SetCurrentLesson, payload});
@@ -58,17 +62,16 @@ export const createNewLesson: CThunk = () => (dispatch, getState) => {
   };
   dispatch(action(ActionType.SetLessons, {[id]: newLesson, ...state.lessons}));
   dispatch(action(ActionType.SetCurrentLesson, id));
-  dispatch(push(RootPath.Rename));
+  dispatch(push(RootPath.Edit));
 };
 
 export const setLessonName: CThunk<string> = name => dispatch => {
   dispatch(setLessonProperty({name}));
-  dispatch(push(RootPath.Edit));
 };
 
 export const startQuiz: CThunk<string> = () => (dispatch, getState) => {
   dispatch(action(ActionType.SetQuiz, {
-    correct: lesson(getState()).questions.map(() => false)
+    correct: selectLesson(getState())!.questions.map(() => false)
   }));
   dispatch(push(RootPath.Quiz));
 };
@@ -76,7 +79,11 @@ export const startQuiz: CThunk<string> = () => (dispatch, getState) => {
 export const setLessonProperty: CThunk<Partial<Lesson>> = payload =>
   (dispatch, getState) => {
     const {currentLesson, lessons} = getState();
-    const updatedLesson = {...lesson(getState()), ...payload};
+    const oldLesson = selectLesson(getState());
+    if (!oldLesson) {
+      throw new Error('No lesson to set property');
+    }
+    const updatedLesson: Lesson = {...oldLesson, ...payload};
     dispatch(action(ActionType.SetLessons, {...lessons, [currentLesson || '']: updatedLesson}));
   };
 

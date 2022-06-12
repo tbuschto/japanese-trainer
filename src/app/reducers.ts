@@ -1,11 +1,11 @@
 import {connectRouter} from 'connected-react-router';
 import {History} from 'history';
 import {combineReducers, Reducer} from 'redux';
-import {Action, ActionType} from './actions';
+import {ActionType, SyncAction} from './actions';
 import {AppState, RootPath, WordElementMode} from './types';
 
 export function createReducer(history: History) {
-  return combineReducers<AppState, Action>(
+  return combineReducers<AppState, SyncAction>(
     {
       router: connectRouter(history),
       screen: setter(ActionType.SetScreen, RootPath.Home as RootPath),
@@ -21,7 +21,7 @@ export function createReducer(history: History) {
   );
 }
 
-type Setter<T> = Reducer<T, Action>;
+type Setter<T> = Reducer<T, SyncAction>;
 
 function setter<T extends AppState[keyof AppState]>(actionType: ActionType, init: T): Setter<T> {
   return (state, action) => {

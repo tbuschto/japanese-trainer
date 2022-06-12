@@ -1,14 +1,16 @@
-import {setScreen} from '../app/actions';
-import {useAppDispatch} from '../app/hooks';
-import {RootPath} from '../app/types';
+import {Action} from './Action';
+import {createNewLesson} from '../app/actions';
 
 export function Lessons() {
-  const dispatch = useAppDispatch();
   return (
     <div>
-      <button onClick={() => dispatch(setScreen(RootPath.Quiz))}>
-         Start
-      </button>
+      <table>
+        <tr>
+          <td>
+            <Action action={createNewLesson()}>New Lesson</Action>
+          </td>
+        </tr>
+      </table>
     </div>
   );
 }

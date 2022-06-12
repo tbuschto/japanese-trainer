@@ -32,3 +32,13 @@ code {
 .navPoint:hover {
   text-decoration: underline;
 }
+
+.action {
+  padding-right: 4px;
+  padding-left: 4px;
+  cursor: pointer;
+}
+
+.action:hover {
+  text-decoration: underline;
+}

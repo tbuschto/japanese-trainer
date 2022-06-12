@@ -4,10 +4,10 @@ import {History, createBrowserHistory} from 'history';
 import {routerMiddleware} from 'connected-react-router';
 import {configureStore} from '@reduxjs/toolkit';
 import {createReducer} from './reducers';
-import {Action, AsyncAction} from './actions';
+import {AsyncAction} from './actions';
 import {AppState} from './types';
 
-export type AppStore = Store<AppState, Action> & {
+export type AppStore = Store<AppState> & {
   dispatch<R>(asyncAction: AsyncAction<R>): R
 };
 

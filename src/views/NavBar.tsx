@@ -1,5 +1,5 @@
 import {push} from 'connected-react-router';
-import {useDispatch} from 'react-redux';
+import {useAppDispatch} from '../app/hooks';
 import {RootPath} from '../app/types';
 
 export const NavBar = () => (
@@ -12,7 +12,7 @@ export const NavBar = () => (
 );
 
 const NavPoint = ({to, children}: {to: RootPath, children: string}) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   return <span className='navPoint' onClick={() => dispatch(push(to))}>
     {children}
   </span>;

@@ -1,8 +1,15 @@
-import {AppState} from './types';
+import {AppState, Lesson} from './types';
 
-export function lesson({currentLesson, lessons}: AppState) {
+export function selectLessons({currentLesson, lessons}: AppState): Lesson | null {
   if (!currentLesson) {
-    throw new Error('No lesson selected');
+    return null;
+  }
+  return lessons[currentLesson];
+}
+
+export function selectLesson({currentLesson, lessons}: AppState): Lesson | null {
+  if (!currentLesson) {
+    return null;
   }
   return lessons[currentLesson];
 }
