@@ -3,14 +3,16 @@ import {createNewLesson} from '../app/actions';
 
 export function Lessons() {
   return (
-    <div>
+    <main>
       <table>
-        <tr>
-          <td>
-            <Action action={createNewLesson()}>New Lesson</Action>
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td>
+              <Action action={() => createNewLesson()}>New Lesson</Action>
+            </td>
+          </tr>
+        </tbody>
       </table>
-    </div>
+    </main>
   );
 }

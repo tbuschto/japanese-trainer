@@ -1,7 +1,7 @@
 export function Settings() {
   return (
-    <div>
+    <main>
       Settings
-    </div>
+    </main>
   );
 }

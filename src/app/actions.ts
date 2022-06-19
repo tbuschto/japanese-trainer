@@ -1,6 +1,6 @@
 import {push, CallHistoryMethodAction} from 'connected-react-router';
 import {ThunkAction, ThunkDispatch} from 'redux-thunk';
-import {AppState, Lesson, LessonId, Lessons, Quiz, RootPath} from './types';
+import {AppState, EditingTarget, Lesson, LessonId, Lessons, Quiz, RootPath} from './types';
 import {selectLesson} from './selectors';
 
 export enum ActionType {
@@ -10,19 +10,22 @@ export enum ActionType {
   SetScreen = 'SET_SCREEN',
   SetQuiz = 'SET_QUIZ',
   SetEditLesson = 'EDIT_LESSON',
-  SetHint = 'SET_HINT'
+  SetHint = 'SET_HINT',
+  SetEditingTarget = 'SET_EDITING_TARGET',
 }
 
 type ActionBase<T extends string, Payload = void> = {type: T, payload?: Payload};
 type SetCurrentLesson = ActionBase<typeof ActionType.SetCurrentLesson, LessonId>;
 type SetLessonName = ActionBase<typeof ActionType.SetEditLesson, LessonId>;
 type SetLessons = ActionBase<typeof ActionType.SetLessons, Lessons>;
+type SetEditingTarget = ActionBase<typeof ActionType.SetEditingTarget, EditingTarget>;
 type SetHint = ActionBase<typeof ActionType.SetHint, string>;
 type SetQuiz = ActionBase<typeof ActionType.SetQuiz, Quiz>;
 
 export type SyncAction = SetCurrentLesson
   | CallHistoryMethodAction
   | SetLessonName
+  | SetEditingTarget
   | SetHint
   | SetQuiz
   | SetLessons;
@@ -43,6 +46,9 @@ export type Action = SyncAction | AsyncAction;
 
 export const setCurrentLesson: CAction<LessonId> = payload =>
   ({type: ActionType.SetCurrentLesson, payload});
+
+export const edit: CAction<EditingTarget> = payload =>
+  ({type: ActionType.SetEditingTarget, payload});
 
 export const setScreen: CAction<RootPath> = payload =>
   push(payload);
@@ -66,7 +72,11 @@ export const createNewLesson: CThunk = () => (dispatch, getState) => {
 };
 
 export const setLessonName: CThunk<string> = name => dispatch => {
+  if (!name) {
+    return;
+  }
   dispatch(setLessonProperty({name}));
+  dispatch(edit('none'));
 };
 
 export const startQuiz: CThunk<string> = () => (dispatch, getState) => {

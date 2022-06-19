@@ -5,14 +5,14 @@ export function Quiz() {
   const lesson = useAppSelector(selectLesson);
   if (!lesson) {
     return (
-      <div>
+      <main>
         No lesson selected
-      </div>
+      </main>
     );
   }
   return (
-    <div>
+    <main>
       {lesson.name}
-    </div>
+    </main>
   );
 }

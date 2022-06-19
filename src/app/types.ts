@@ -38,6 +38,7 @@ export type Reading = string;
 export type Meaning = Readonly<string[]>;
 export type Lessons = {[id: string]: Lesson};
 export type Quiz = {correct: boolean[]};
+export type EditingTarget = number | 'name' | 'none';
 
 export interface Lesson {
   name: string;
@@ -55,6 +56,7 @@ export interface AppState {
   readingMode: WordElementMode;
   quiz: Quiz | null;
   hint: string;
+  editing: EditingTarget;
 }
 
 // https://github.com/supasate/connected-react-router/issues/570

@@ -2,7 +2,7 @@ import {connectRouter} from 'connected-react-router';
 import {History} from 'history';
 import {combineReducers, Reducer} from 'redux';
 import {ActionType, SyncAction} from './actions';
-import {AppState, RootPath, WordElementMode} from './types';
+import {AppState, EditingTarget, RootPath, WordElementMode} from './types';
 
 export function createReducer(history: History) {
   return combineReducers<AppState, SyncAction>(
@@ -16,7 +16,8 @@ export function createReducer(history: History) {
       kanjiMode: state => state || WordElementMode.Hide,
       meaningMode: state => state || WordElementMode.Show,
       readingMode: state => state || WordElementMode.Ask,
-      hint: state => state || ''
+      hint: state => state || '',
+      editing: setter(ActionType.SetEditingTarget, 'none' as EditingTarget)
     }
   );
 }
