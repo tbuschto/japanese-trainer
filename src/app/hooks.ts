@@ -1,7 +1,7 @@
 import {useState, FormEvent} from 'react';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 import {Dispatch} from './actions';
-import {AppState} from './types';
+import {AppState} from './AppState';
 
 export const useAppDispatch = () => useDispatch<Dispatch>();
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;

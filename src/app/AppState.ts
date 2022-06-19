@@ -1,5 +1,20 @@
 import {RouterState} from 'connected-react-router';
 
+export interface AppState {
+  router: RouterState<unknown>;
+  screen: RootPath;
+  lessons: Lessons;
+  currentLesson: LessonId | null;
+  currentQuestion: number;
+  kanjiMode: WordElementMode;
+  meaningMode: WordElementMode;
+  readingMode: WordElementMode;
+  quiz: Quiz | null;
+  hint: string;
+  editingTarget: EditingTarget;
+  editingValue: string;
+}
+
 export type JTDictSeq = string;
 
 export type JTDict = {
@@ -43,27 +58,4 @@ export type EditingTarget = number | 'name' | 'none';
 export interface Lesson {
   name: string;
   questions: Array<{id: JTDictSeq, reading: string} | {phrase: string, translation: string}>;
-}
-
-export interface AppState {
-  router: RouterState<unknown>;
-  screen: RootPath;
-  lessons: Lessons;
-  currentLesson: LessonId | null;
-  currentQuestion: number;
-  kanjiMode: WordElementMode;
-  meaningMode: WordElementMode;
-  readingMode: WordElementMode;
-  quiz: Quiz | null;
-  hint: string;
-  editing: EditingTarget;
-}
-
-// https://github.com/supasate/connected-react-router/issues/570
-declare module 'connected-react-router' {
-
-  interface ConnectedRouterProps {
-    children?: JSX.Element;
-  }
-
 }

@@ -6,7 +6,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import logger from 'redux-logger';
 import {createReducer} from './reducers';
 import {AsyncAction} from './actions';
-import {AppState} from './types';
+import {AppState} from './AppState';
 
 export type AppStore = Store<AppState> & {
   dispatch<R>(asyncAction: AsyncAction<R>): R

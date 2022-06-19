@@ -1,16 +1,18 @@
 import {Action} from './Action';
 import {Label, LESSON} from './styles';
-import {edit, setLessonName} from '../app/actions';
-import {useAppDispatch, useInput} from '../app/hooks';
-import {Lesson, EditingTarget} from '../app/types';
+import {cancelEdit, acceptInput, editName, handleInput} from '../app/actions';
+import {useAppDispatch, useAppSelector} from '../app/hooks';
+import {selectEditingTarget, selectEditingValue, selectLesson} from '../app/selectors';
 
-export function LessonNameRow(props: {lesson: Lesson, editing: EditingTarget}) {
-  return props.editing === 'name'
-    ? <NameEditRow lesson={props.lesson}/>
-    : <NameViewRow lesson={props.lesson}/>;
+export function LessonNameRow() {
+  const editing = useAppSelector(selectEditingTarget);
+  return editing === 'name'
+    ? <NameEditRow/>
+    : <NameViewRow/>;
 }
 
-function NameViewRow({lesson}: {lesson: Lesson}) {
+function NameViewRow() {
+  const lesson = useAppSelector(selectLesson)!;
   return (
     <tr>
       <td>
@@ -22,25 +24,24 @@ function NameViewRow({lesson}: {lesson: Lesson}) {
         </span>
       </td>
       <td>
-        <Action action={() => edit('name')}>Edit</Action>
+        <Action action={editName}>Edit</Action>
       </td>
       <td></td>
     </tr>
   );
 }
 
-function NameEditRow({lesson}: {lesson: Lesson}) {
-  const newName = useInput(lesson.name);
-  const accept = () => setLessonName(newName.get());
-  const cancel = () => edit('none');
+function NameEditRow() {
+  const lesson = useAppSelector(selectLesson)!;
+  const newName = useAppSelector(selectEditingValue)!;
   const dispatch = useAppDispatch();
   const keyHandler = (ev: React.KeyboardEvent) => {
     if (ev.key === 'Enter') {
       ev.preventDefault();
-      dispatch(accept());
+      dispatch(acceptInput());
     } else if (ev.key === 'Escape') {
       ev.preventDefault();
-      dispatch(cancel());
+      dispatch(cancelEdit());
     }
   };
   return (
@@ -53,17 +54,17 @@ function NameEditRow({lesson}: {lesson: Lesson}) {
           className={LESSON}
           type='text'
           spellCheck={false}
-          onChange={newName.set}
+          onChange={handleInput(dispatch)}
           onKeyDown={keyHandler}
           placeholder={lesson.name}
-          value={newName.get()}
+          value={newName}
           autoFocus/>
       </td>
       <td>
-        <Action action={accept}>Save</Action>
+        <Action action={acceptInput}>Save</Action>
       </td>
       <td>
-        <Action action={cancel}>Cancel</Action>
+        <Action action={cancelEdit}>Cancel</Action>
       </td>
     </tr>
   );

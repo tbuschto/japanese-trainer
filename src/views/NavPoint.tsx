@@ -1,6 +1,6 @@
 import {push} from 'connected-react-router';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
-import {RootPath} from '../app/types';
+import {RootPath} from '../app/AppState';
 
 export const NavPoint = ({to, children}: {to: RootPath, children: string}) => {
   const dispatch = useAppDispatch();

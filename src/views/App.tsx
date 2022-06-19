@@ -5,7 +5,7 @@ import {Settings} from './Settings';
 import {Quiz} from './Quiz';
 import {Edit} from './Edit';
 import {NavPoint} from './NavPoint';
-import {RootPath} from '../app/types';
+import {RootPath} from '../app/AppState';
 import {trainer} from '../app/JapaneseTrainer';
 
 export function App() {

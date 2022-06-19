@@ -2,7 +2,7 @@ import {connectRouter} from 'connected-react-router';
 import {History} from 'history';
 import {combineReducers, Reducer} from 'redux';
 import {ActionType, SyncAction} from './actions';
-import {AppState, EditingTarget, RootPath, WordElementMode} from './types';
+import {AppState, EditingTarget, RootPath, WordElementMode} from './AppState';
 
 export function createReducer(history: History) {
   return combineReducers<AppState, SyncAction>(
@@ -17,7 +17,8 @@ export function createReducer(history: History) {
       meaningMode: state => state || WordElementMode.Show,
       readingMode: state => state || WordElementMode.Ask,
       hint: state => state || '',
-      editing: setter(ActionType.SetEditingTarget, 'none' as EditingTarget)
+      editingTarget: setter(ActionType.SetEditingTarget, 'none' as EditingTarget),
+      editingValue: setter(ActionType.SetEditingValue, '' as string)
     }
   );
 }
@@ -26,7 +27,7 @@ type Setter<T> = Reducer<T, SyncAction>;
 
 function setter<T extends AppState[keyof AppState]>(actionType: ActionType, init: T): Setter<T> {
   return (state, action) => {
-    if (action.type === actionType && action.payload) {
+    if (action.type === actionType) {
       return action.payload as T;
     }
     return state || init;

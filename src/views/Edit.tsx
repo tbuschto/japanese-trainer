@@ -7,12 +7,11 @@ export function Edit() {
   if (!lesson) {
     return <main>No lesson selected</main>;
   }
-  const editing = useAppSelector(state => state.editing);
   return (
     <main>
       <table>
         <tbody>
-          <LessonNameRow lesson={lesson} editing={editing}/>
+          <LessonNameRow/>
         </tbody>
       </table>
     </main>
