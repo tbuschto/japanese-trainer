@@ -4,6 +4,7 @@ import {History, createBrowserHistory} from 'history';
 import {routerMiddleware} from 'connected-react-router';
 import {configureStore} from '@reduxjs/toolkit';
 import logger from 'redux-logger';
+import {persistStore, Persistor} from 'redux-persist';
 import {createReducer} from './reducers';
 import {AsyncAction} from './actions';
 import {AppState} from './AppState';
@@ -16,6 +17,7 @@ export class JapaneseTrainer {
 
   readonly history: History;
   readonly store: AppStore;
+  readonly persist: Persistor;
 
   constructor() {
     this.history = createBrowserHistory();
@@ -23,6 +25,7 @@ export class JapaneseTrainer {
       reducer: createReducer(this.history),
       middleware: [thunk, routerMiddleware(this.history), logger]
     }) as AppStore;
+    this.persist = persistStore(this.store);
   }
 
 }

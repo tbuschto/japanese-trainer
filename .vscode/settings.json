@@ -9,5 +9,8 @@
   "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
   "eslint.alwaysShowStatus": true,
   "eslint.format.enable": true,
-  "eslint.lintTask.enable": true
+  "eslint.lintTask.enable": true,
+  "cSpell.words": [
+    "Persistor"
+  ]
 }

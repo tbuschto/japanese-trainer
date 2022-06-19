@@ -13,7 +13,6 @@ render((
   </React.StrictMode>
 ), document.getElementById('root'));
 
-
 // https://github.com/supasate/connected-react-router/issues/570
 declare module 'connected-react-router' {
 

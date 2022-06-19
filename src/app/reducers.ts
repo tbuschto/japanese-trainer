@@ -1,11 +1,13 @@
 import {connectRouter} from 'connected-react-router';
 import {History} from 'history';
 import {combineReducers, Reducer} from 'redux';
+import {persistReducer} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import {ActionType, SyncAction} from './actions';
 import {AppState, EditingTarget, RootPath, WordElementMode} from './AppState';
 
 export function createReducer(history: History) {
-  return combineReducers<AppState, SyncAction>(
+  const rootReducer = combineReducers<AppState, SyncAction>(
     {
       router: connectRouter(history),
       screen: setter(ActionType.SetScreen, RootPath.Home as RootPath),
@@ -21,6 +23,7 @@ export function createReducer(history: History) {
       editingValue: setter(ActionType.SetEditingValue, '' as string)
     }
   );
+  return persistReducer({key: 'root', storage}, rootReducer);
 }
 
 type Setter<T> = Reducer<T, SyncAction>;
