@@ -1,52 +1,25 @@
-import {push, CallHistoryMethodAction} from 'connected-react-router';
+import {push} from 'connected-react-router';
 import {FormEvent} from 'react';
-import {ThunkAction, ThunkDispatch} from 'redux-thunk';
-import {AppState, EditingTarget, Lesson, LessonId, Lessons, Quiz, RootPath} from './AppState';
-import {selectLesson} from './selectors';
+import {CAction, ActionType, CThunk, Dispatch} from './Action';
+import {EditingTarget, Lesson, LessonId, RootPath} from './AppState';
+import {selectCurrentLesson} from './selectors';
 
-export enum ActionType {
-  SetCurrentLesson = 'SET_CURRENT_LESSON',
-  SetLessons = 'SET_LESSONS',
-  NewLesson = 'NEW_LESSON',
-  SetScreen = 'SET_SCREEN',
-  SetQuiz = 'SET_QUIZ',
-  SetEditLesson = 'EDIT_LESSON',
-  SetHint = 'SET_HINT',
-  SetEditingTarget = 'SET_EDITING_TARGET',
-  SetEditingValue = 'SET_EDITING_VALUE',
-}
+export const newQuiz: CThunk<string> = (lessonId: string) => dispatch => {
+  dispatch(setCurrentLesson(lessonId));
+  dispatch(action(ActionType.SetQuiz, {correct: []}));
+  dispatch(push(RootPath.Quiz));
+};
 
-type ActionBase<T extends string, Payload = void> = {type: T, payload?: Payload};
-type SetCurrentLesson = ActionBase<typeof ActionType.SetCurrentLesson, LessonId>;
-type SetLessonName = ActionBase<typeof ActionType.SetEditLesson, LessonId>;
-type SetLessons = ActionBase<typeof ActionType.SetLessons, Lessons>;
-type SetEditingTarget = ActionBase<typeof ActionType.SetEditingTarget, EditingTarget>;
-type SetEditingValue = ActionBase<typeof ActionType.SetEditingValue, string>;
-type SetHint = ActionBase<typeof ActionType.SetHint, string>;
-type SetQuiz = ActionBase<typeof ActionType.SetQuiz, Quiz>;
+export const editLesson: CThunk<string> = (lessonId: string) => dispatch => {
+  dispatch(setCurrentLesson(lessonId));
+  dispatch(push(RootPath.Edit));
+};
 
-export type SyncAction = SetCurrentLesson
-  | CallHistoryMethodAction
-  | SetLessonName
-  | SetEditingTarget
-  | SetEditingValue
-  | SetHint
-  | SetQuiz
-  | SetLessons;
-
-export type AsyncAction<R = Promise<void> | void> = ThunkAction<
-  R,
-  AppState,
-  void,
-  SyncAction
->;
-
-export type Dispatch = ThunkDispatch<AppState, void, SyncAction>;
-
-type CThunk<T = void> = (arg: T) => ThunkAction<void, AppState, void, SyncAction>;
-type CAction<T> = (payload: T) => SyncAction;
-
-export type Action = SyncAction | AsyncAction;
+export const deleteLesson: CThunk<string> = (lessonId: string) => (dispatch, getState) => {
+  const lessons = {...getState().lessons};
+  delete lessons[lessonId];
+  dispatch(action(ActionType.SetLessons, lessons));
+};
 
 export const setCurrentLesson: CAction<LessonId> = payload =>
   ({type: ActionType.SetCurrentLesson, payload});
@@ -54,7 +27,7 @@ export const setCurrentLesson: CAction<LessonId> = payload =>
 export const cancelEdit = () => setEditingTarget('none');
 
 export const editName: CThunk = () => (dispatch, getState) => {
-  const lesson = selectLesson(getState());
+  const lesson = selectCurrentLesson(getState());
   if (!lesson) {
     return;
   }
@@ -64,9 +37,6 @@ export const editName: CThunk = () => (dispatch, getState) => {
 
 export const setEditingTarget: CAction<EditingTarget> = payload =>
   ({type: ActionType.SetEditingTarget, payload});
-
-export const setScreen: CAction<RootPath> = payload =>
-  push(payload);
 
 export const setHint: CAction<string> = payload =>
   ({type: ActionType.SetHint, payload});
@@ -106,7 +76,7 @@ export const setEditingValue: CThunk<string> = value => dispatch => {
 
 export const startQuiz: CThunk<string> = () => (dispatch, getState) => {
   dispatch(action(ActionType.SetQuiz, {
-    correct: selectLesson(getState())!.questions.map(() => false)
+    correct: selectCurrentLesson(getState())!.questions.map(() => false)
   }));
   dispatch(push(RootPath.Quiz));
 };
@@ -114,7 +84,7 @@ export const startQuiz: CThunk<string> = () => (dispatch, getState) => {
 export const setLessonProperty: CThunk<Partial<Lesson>> = payload =>
   (dispatch, getState) => {
     const {currentLesson, lessons} = getState();
-    const oldLesson = selectLesson(getState());
+    const oldLesson = selectCurrentLesson(getState());
     if (!oldLesson) {
       throw new Error('No lesson to set property');
     }

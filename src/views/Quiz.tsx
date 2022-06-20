@@ -1,8 +1,8 @@
 import {useAppSelector} from '../app/hooks';
-import {selectLesson} from '../app/selectors';
+import {selectCurrentLesson} from '../app/selectors';
 
 export function Quiz() {
-  const lesson = useAppSelector(selectLesson);
+  const lesson = useAppSelector(selectCurrentLesson);
   if (!lesson) {
     return (
       <main>

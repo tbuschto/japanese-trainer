@@ -1,4 +1,4 @@
-import {Action as ReduxAction} from '../app/actions';
+import {Action as ReduxAction} from '../app/Action';
 import {useAppDispatch} from '../app/hooks';
 
 export interface ActionProperties {

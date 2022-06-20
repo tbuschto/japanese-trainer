@@ -6,7 +6,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import logger from 'redux-logger';
 import {persistStore, Persistor} from 'redux-persist';
 import {createReducer} from './reducers';
-import {AsyncAction} from './actions';
+import {AsyncAction} from './Action';
 import {AppState} from './AppState';
 
 export type AppStore = Store<AppState> & {

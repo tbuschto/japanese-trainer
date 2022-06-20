@@ -3,7 +3,7 @@ import {History} from 'history';
 import {combineReducers, Reducer} from 'redux';
 import {persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import {ActionType, SyncAction} from './actions';
+import {ActionType, SyncAction} from './Action';
 import {AppState, EditingTarget, RootPath, WordElementMode} from './AppState';
 
 export function createReducer(history: History) {

@@ -1,9 +1,9 @@
 import {LessonNameRow} from './LessonNameRow';
 import {useAppSelector} from '../app/hooks';
-import {selectLesson} from '../app/selectors';
+import {selectCurrentLesson} from '../app/selectors';
 
 export function Edit() {
-  const lesson = useAppSelector(selectLesson);
+  const lesson = useAppSelector(selectCurrentLesson);
   if (!lesson) {
     return <main>No lesson selected</main>;
   }

@@ -1,8 +1,8 @@
 import {Action} from './Action';
-import {Label, LESSON} from './styles';
+import {DATA, Label, LESSON} from './styles';
 import {cancelEdit, acceptInput, editName, handleInput} from '../app/actions';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
-import {selectEditingTarget, selectEditingValue, selectLesson} from '../app/selectors';
+import {selectEditingTarget, selectEditingValue, selectCurrentLesson} from '../app/selectors';
 
 export function LessonNameRow() {
   const editing = useAppSelector(selectEditingTarget);
@@ -12,13 +12,13 @@ export function LessonNameRow() {
 }
 
 function NameViewRow() {
-  const lesson = useAppSelector(selectLesson)!;
+  const lesson = useAppSelector(selectCurrentLesson)!;
   return (
     <tr>
       <td>
         <LessonLabel/>
       </td>
-      <td>
+      <td className={DATA}>
         <span className={LESSON}>
           {lesson.name}
         </span>
@@ -32,7 +32,7 @@ function NameViewRow() {
 }
 
 function NameEditRow() {
-  const lesson = useAppSelector(selectLesson)!;
+  const lesson = useAppSelector(selectCurrentLesson)!;
   const newName = useAppSelector(selectEditingValue)!;
   const dispatch = useAppDispatch();
   const keyHandler = (ev: React.KeyboardEvent) => {
@@ -49,7 +49,7 @@ function NameEditRow() {
       <td>
         <LessonLabel/>
       </td>
-      <td>
+      <td className={DATA}>
         <input
           className={LESSON}
           type='text'
