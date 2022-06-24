@@ -1,38 +1,23 @@
-import {connectRouter} from 'connected-react-router';
-import {History} from 'history';
-import {combineReducers, Reducer} from 'redux';
+import {Reducer} from '@reduxjs/toolkit';
+import {RouterState} from 'connected-react-router';
 import {persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {ActionType, SyncAction} from './Action';
-import {AppState, EditingTarget, RootPath, WordElementMode} from './AppState';
+import {AppState, defaults} from './AppState';
 
-export function createReducer(history: History) {
-  const rootReducer = combineReducers<AppState, SyncAction>(
-    {
-      router: connectRouter(history),
-      screen: setter(ActionType.SetScreen, RootPath.Home as RootPath),
-      lessons: setter(ActionType.SetLessons, {}),
-      quiz: state => state || null,
-      currentLesson: setter(ActionType.SetCurrentLesson, null as string | null),
-      currentQuestion: state => state || 0,
-      kanjiMode: state => state || WordElementMode.Hide,
-      meaningMode: state => state || WordElementMode.Show,
-      readingMode: state => state || WordElementMode.Ask,
-      hint: state => state || '',
-      editingTarget: setter(ActionType.SetEditingTarget, 'none' as EditingTarget),
-      editingValue: setter(ActionType.SetEditingValue, '' as string)
+export function createReducer(router: Reducer<RouterState<unknown>>) {
+  const rootReducer = (state: AppState | undefined, action: SyncAction): AppState => {
+    const oldState = state || defaults;
+    const newState = {...oldState};
+    newState.router = router(oldState.router, action);
+    let changed = newState.router !== oldState.router;
+    if (action.type === ActionType.SetProperty) {
+      const {property, value} = action.payload;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (newState[property] as any) = value;
+      changed = changed || (newState[property] !== oldState[property]);
     }
-  );
-  return persistReducer({key: 'root', storage}, rootReducer);
-}
-
-type Setter<T> = Reducer<T, SyncAction>;
-
-function setter<T extends AppState[keyof AppState]>(actionType: ActionType, init: T): Setter<T> {
-  return (state, action) => {
-    if (action.type === actionType) {
-      return action.payload as T;
-    }
-    return state || init;
+    return changed ? newState : oldState;
   };
+  return persistReducer({key: 'root', blacklist: ['router'], storage}, rootReducer);
 }

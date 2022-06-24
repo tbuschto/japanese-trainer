@@ -1,8 +1,8 @@
 import {Action} from './Action';
 import {DATA, Label, LESSON} from './styles';
-import {cancelEdit, acceptInput, editName, handleInput} from '../app/actions';
+import {cancelEdit, acceptInput, editName, handleNameInput} from '../app/actions';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
-import {selectEditingTarget, selectEditingValue, selectCurrentLesson} from '../app/selectors';
+import {selectEditingTarget, selectInputLessonName, selectCurrentLesson} from '../app/selectors';
 
 export function LessonNameRow() {
   const editing = useAppSelector(selectEditingTarget);
@@ -33,7 +33,7 @@ function NameViewRow() {
 
 function NameEditRow() {
   const lesson = useAppSelector(selectCurrentLesson)!;
-  const newName = useAppSelector(selectEditingValue)!;
+  const newName = useAppSelector(selectInputLessonName)!;
   const dispatch = useAppDispatch();
   const keyHandler = (ev: React.KeyboardEvent) => {
     if (ev.key === 'Enter') {
@@ -54,7 +54,7 @@ function NameEditRow() {
           className={LESSON}
           type='text'
           spellCheck={false}
-          onChange={handleInput(dispatch)}
+          onChange={handleNameInput(dispatch)}
           onKeyDown={keyHandler}
           placeholder={lesson.name}
           value={newName}

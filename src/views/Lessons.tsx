@@ -15,12 +15,12 @@ export function Lessons() {
             <LessonRow lessonId={lessonId}/>
           )}
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
             <td>
               <Action action={() => createNewLesson()}>New</Action>
             </td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>

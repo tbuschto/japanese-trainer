@@ -6,7 +6,7 @@ export const selectLesson = (id: string) => ({lessons}: AppState) =>
 export const selectLessons = ({lessons}: AppState) =>
   Object.keys(lessons).sort();
 
-export const selectCurrentLesson = ({currentLesson, lessons}: AppState): Lesson | null => {
+export const selectCurrentLesson = ({currentLesson: currentLesson, lessons}: AppState): Lesson | null => {
   if (!currentLesson) {
     return null;
   }
@@ -15,4 +15,8 @@ export const selectCurrentLesson = ({currentLesson, lessons}: AppState): Lesson 
 
 export const selectEditingTarget = ({editingTarget}: AppState) => editingTarget;
 
-export const selectEditingValue = ({editingValue}: AppState) => editingValue;
+export const selectInputLessonName = ({inputLessonName}: AppState) => inputLessonName;
+
+export const selectEditReading = ({editReading}: AppState) => editReading;
+
+// TODO: generate

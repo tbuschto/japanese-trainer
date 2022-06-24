@@ -1,12 +1,17 @@
 import {push} from 'connected-react-router';
 import {FormEvent} from 'react';
-import {CAction, ActionType, CThunk, Dispatch} from './Action';
-import {EditingTarget, Lesson, LessonId, RootPath} from './AppState';
+import {CAction, ActionType, CThunk, Dispatch, SetPropertyAction} from './Action';
+import {AppState, EditingTarget, Lesson, LessonId, RootPath} from './AppState';
 import {selectCurrentLesson} from './selectors';
+
+export const newQuestion: CThunk = () => (dispatch, getState) => {
+  const questions = selectCurrentLesson(getState())!.questions!;
+  dispatch(setEditingTarget(questions.length));
+};
 
 export const newQuiz: CThunk<string> = (lessonId: string) => dispatch => {
   dispatch(setCurrentLesson(lessonId));
-  dispatch(action(ActionType.SetQuiz, {correct: []}));
+  dispatch(setProperty('quiz', {correct: []}));
   dispatch(push(RootPath.Quiz));
 };
 
@@ -18,11 +23,11 @@ export const editLesson: CThunk<string> = (lessonId: string) => dispatch => {
 export const deleteLesson: CThunk<string> = (lessonId: string) => (dispatch, getState) => {
   const lessons = {...getState().lessons};
   delete lessons[lessonId];
-  dispatch(action(ActionType.SetLessons, lessons));
+  dispatch(setProperty('lessons', lessons));
 };
 
-export const setCurrentLesson: CAction<LessonId> = payload =>
-  ({type: ActionType.SetCurrentLesson, payload});
+export const setCurrentLesson: CAction<LessonId> = value =>
+  ({type: ActionType.SetProperty, payload: {property: 'currentLesson', value}});
 
 export const cancelEdit = () => setEditingTarget('none');
 
@@ -32,14 +37,10 @@ export const editName: CThunk = () => (dispatch, getState) => {
     return;
   }
   dispatch(setEditingTarget('name'));
-  dispatch(setEditingValue(lesson.name));
+  dispatch(setProperty('inputLessonName', lesson.name));
 };
 
-export const setEditingTarget: CAction<EditingTarget> = payload =>
-  ({type: ActionType.SetEditingTarget, payload});
-
-export const setHint: CAction<string> = payload =>
-  ({type: ActionType.SetHint, payload});
+export const setEditingTarget: CAction<EditingTarget> = value => setProperty('editingTarget', value);
 
 export const createNewLesson: CThunk = () => (dispatch, getState) => {
   const state = getState();
@@ -51,18 +52,18 @@ export const createNewLesson: CThunk = () => (dispatch, getState) => {
     name: 'Lesson ' + id,
     questions: []
   };
-  dispatch(action(ActionType.SetLessons, {[id]: newLesson, ...state.lessons}));
-  dispatch(action(ActionType.SetCurrentLesson, id));
+  dispatch(setProperty('lessons', {[id]: newLesson, ...state.lessons}));
+  dispatch(setProperty('currentLesson', id));
   dispatch(push(RootPath.Edit));
   dispatch(editName());
-  dispatch(setEditingValue(''));
+  dispatch(setProperty('inputLessonName', ''));
 };
 
-export const handleInput = (dispatch: Dispatch) =>
-  (ev: FormEvent<HTMLInputElement>) => dispatch(setEditingValue(ev.currentTarget.value));
+export const handleNameInput = (dispatch: Dispatch) =>
+  (ev: FormEvent<HTMLInputElement>) => dispatch(setProperty('inputLessonName', ev.currentTarget.value));
 
 export const acceptInput: CThunk = () => (dispatch, getState) => {
-  const value = getState().editingValue;
+  const value = getState().inputLessonName;
   if (!value) {
     return;
   }
@@ -70,12 +71,8 @@ export const acceptInput: CThunk = () => (dispatch, getState) => {
   dispatch(setEditingTarget('none'));
 };
 
-export const setEditingValue: CThunk<string> = value => dispatch => {
-  dispatch(action(ActionType.SetEditingValue, value));
-};
-
 export const startQuiz: CThunk<string> = () => (dispatch, getState) => {
-  dispatch(action(ActionType.SetQuiz, {
+  dispatch(setProperty('quiz', {
     correct: selectCurrentLesson(getState())!.questions.map(() => false)
   }));
   dispatch(push(RootPath.Quiz));
@@ -83,14 +80,21 @@ export const startQuiz: CThunk<string> = () => (dispatch, getState) => {
 
 export const setLessonProperty: CThunk<Partial<Lesson>> = payload =>
   (dispatch, getState) => {
-    const {currentLesson, lessons} = getState();
+    const {currentLesson: currentLesson, lessons} = getState();
     const oldLesson = selectCurrentLesson(getState());
     if (!oldLesson) {
       throw new Error('No lesson to set property');
     }
     const updatedLesson: Lesson = {...oldLesson, ...payload};
-    dispatch(action(ActionType.SetLessons, {...lessons, [currentLesson || '']: updatedLesson}));
+    dispatch(setProperty('lessons', {...lessons, [currentLesson || '']: updatedLesson}));
   };
+
+function setProperty<
+  Property extends keyof AppState,
+  Value extends AppState[Property] = AppState[Property]
+>(property: Property, value: Value): SetPropertyAction {
+  return action(ActionType.SetProperty, {property, value});
+}
 
 function action<T extends ActionType, U>(type: T, payload: U): {type: T, payload: U} {
   return {type, payload};
