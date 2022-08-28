@@ -47,10 +47,12 @@
   "devDependencies": {
     "@types/react-router": "^5.1.18",
     "@types/redux-logger": "^3.0.9",
+    "@types/underscore": "^1.11.4",
     "eslint-plugin-import": "^2.26.0",
     "history": "^4.10.1",
     "react-router-dom": "^6.3.0",
     "redux-logger": "^3.0.6",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "underscore": "^1.13.4"
   }
 }

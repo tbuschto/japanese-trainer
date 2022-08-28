@@ -38,8 +38,16 @@ nav {
   color: #ff8c00;
 }
 
+h1 {
+  margin: 0px;
+  font-size: 22px;
+  font-weight: 400;
+  color: #ffbc70;
+}
+
 .navPoint:hover {
   color: orangered;
+  user-select: none;
 }
 
 .navPoint.selected {
@@ -51,6 +59,11 @@ nav {
   padding-left: 4px;
   cursor: pointer;
   color: darkorange;
+  user-select: none;
+}
+
+.action.disabled {
+  opacity: 0.4;
 }
 
 .action:hover {
@@ -59,16 +72,30 @@ nav {
 
 .label {
   margin: 4px;
-  font-weight: bolder;
+  font-weight: bold;
+  user-select: none;
 }
 
 main {
+  display: flex;
+  flex-flow: column;
   padding: 8px 24px 8px 24px;
+  align-self: center;
+  min-width: 700px;
+  max-width: 1000px;
 }
 
 main table {
   width: 100%;
   border-spacing: 0px;
+}
+
+main table tr {
+  height: 28px;
+}
+
+main table tr:hover {
+  background-color: rgba(200, 200, 200, 0.2);
 }
 
 main table td {
@@ -86,18 +113,74 @@ main table td.data {
 main table .lesson {
   margin-left: 4px;
   margin-right: 4px;
-  font-family: inherit;
   background-color: transparent;
-  color: inherit;
   border: none;
-  font-size: inherit;
   padding: 0px;
   padding-left: 4px;
   margin: 0px;
-  outline: none;
   width: 100%;
 }
 
-main table input.lesson {
+input {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  border: none;
   background-color: rgba(200, 200, 200, 0.3);
+}
+
+main table .number {
+  display: inline-block;
+  min-width: 25px;
+  opacity: 0.6;
+  margin-left: 8px;
+  text-align: right;
+  user-select: none;
+}
+
+main table .title {
+  margin-left: 8px;
+}
+
+.editCard {
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: 30px;
+  row-gap: 15px;
+}
+
+.editCard h1 {
+  flex: 1 100%;
+}
+
+.sep {
+  user-select: none;
+}
+
+.editCard .form {
+  display: flex;
+  flex-flow: column;
+  flex: 1 40%;
+  row-gap: 2px;
+}
+
+.editCard .form input {
+  padding: 4px;
+  margin-bottom: 12px;
+}
+
+.editCard .dictionary {
+  height: 400px;
+  flex: 1 40%;
+  display: flex;
+  flex-flow: column;
+  flex: 1 40%;
+  row-gap: 2px;
+}
+
+.editCard ul {
+  background: #222222;
+  height: 300px;
+  margin: 0px;
 }

@@ -1,30 +1,29 @@
 import {Action} from './Action';
 import {DATA, Label, LESSON} from './styles';
-import {cancelEdit, acceptInput, editName, handleNameInput} from '../app/actions';
-import {useAppDispatch, useAppSelector} from '../app/hooks';
-import {selectEditingTarget, selectInputLessonName, selectCurrentLesson} from '../app/selectors';
+import {TextInput} from './TextInput';
+import {cancelEdit, acceptInputLessonName, editName} from '../app/actions';
+import {handleInputLessonName} from '../app/InputHandler';
+import {$, _} from '../app/hooks';
+import {select, selectCurrentLesson} from '../app/selectors';
 
 export function LessonNameRow() {
-  const editing = useAppSelector(selectEditingTarget);
-  return editing === 'name'
+  return $(select.editingTarget) === 'name'
     ? <NameEditRow/>
     : <NameViewRow/>;
 }
 
 function NameViewRow() {
-  const lesson = useAppSelector(selectCurrentLesson)!;
+  const lesson = $(selectCurrentLesson)!;
   return (
     <tr>
-      <td>
+      <td colSpan={2} className={DATA}>
         <LessonLabel/>
-      </td>
-      <td className={DATA}>
         <span className={LESSON}>
           {lesson.name}
         </span>
       </td>
       <td>
-        <Action action={editName}>Edit</Action>
+        <Action id='editLessonName' action={editName}>Edit</Action>
       </td>
       <td></td>
     </tr>
@@ -32,13 +31,13 @@ function NameViewRow() {
 }
 
 function NameEditRow() {
-  const lesson = useAppSelector(selectCurrentLesson)!;
-  const newName = useAppSelector(selectInputLessonName)!;
-  const dispatch = useAppDispatch();
+  const lesson = $(selectCurrentLesson)!;
+  const newName = $(select.inputLessonName)!;
+  const dispatch = _();
   const keyHandler = (ev: React.KeyboardEvent) => {
     if (ev.key === 'Enter') {
       ev.preventDefault();
-      dispatch(acceptInput());
+      dispatch(acceptInputLessonName());
     } else if (ev.key === 'Escape') {
       ev.preventDefault();
       dispatch(cancelEdit());
@@ -50,18 +49,16 @@ function NameEditRow() {
         <LessonLabel/>
       </td>
       <td className={DATA}>
-        <input
+        <TextInput
           className={LESSON}
-          type='text'
-          spellCheck={false}
-          onChange={handleNameInput(dispatch)}
+          onChange={handleInputLessonName(dispatch)}
           onKeyDown={keyHandler}
           placeholder={lesson.name}
           value={newName}
           autoFocus/>
       </td>
       <td>
-        <Action action={acceptInput}>Save</Action>
+        <Action action={acceptInputLessonName}>Save</Action>
       </td>
       <td>
         <Action action={cancelEdit}>Cancel</Action>
@@ -70,4 +67,4 @@ function NameEditRow() {
   );
 }
 
-const LessonLabel = () => <Label>Lesson&nbsp;Name:</Label>;
+const LessonLabel = () => <Label>Lesson:</Label>;

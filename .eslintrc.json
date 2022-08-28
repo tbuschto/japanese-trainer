@@ -180,10 +180,7 @@
       "warn",
       "consistent-as-needed"
     ],
-    "curly": [
-      "warn",
-      "all"
-    ],
+    "curly": "off",
     "eol-last": "warn",
     "no-with": "warn",
     "no-var": "warn",

@@ -6,7 +6,10 @@ export const NavPoint = ({to, children}: {to: RootPath, children: string}) => {
   const dispatch = useAppDispatch();
   const current = useAppSelector(state => state.router.location.pathname);
   const className = 'navPoint' + (current === to ? ' selected' : '');
-  return <span className={className} onClick={() => dispatch(push(to))}>
+  return <span
+    className={className}
+    tabIndex={0}
+    onClick={() => dispatch(push(to))}>
     {children}
   </span>;
 };

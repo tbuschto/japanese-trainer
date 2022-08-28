@@ -1,23 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {RouterState} from 'connected-react-router';
+import _ from 'underscore';
 
 export interface AppState {
   router: RouterState<unknown>;
   screen: RootPath;
   lessons: Lessons;
   currentLesson: LessonId | null;
-  currentQuestion: number;
+  currentQuizCard: number;
   kanjiMode: WordElementMode;
   meaningMode: WordElementMode;
   readingMode: WordElementMode;
   quiz: Quiz | null;
   hint: string;
+  focus: HTMLId;
   editingTarget: EditingTarget;
   inputLessonName: string;
-  edit日本語: string;
+  editJapanese: string;
   editReading: string;
   editTranslation: string;
-  quiz日本語: string;
+  quizJapanese: string;
   quizReading: string;
   quizTranslation: string;
   suggestions: JTDictReadingRef[];
@@ -44,32 +46,30 @@ export const defaults: Readonly<AppState> = Object.freeze({
   screen: RootPath.Home,
   lessons: {},
   currentLesson: null,
-  currentQuestion: 0,
+  currentQuizCard: 0,
   kanjiMode: WordElementMode.Show,
   meaningMode: WordElementMode.Show,
   readingMode: WordElementMode.Show,
   quiz: null,
   hint: '',
+  focus: '',
   editingTarget: 0,
   inputLessonName: 'none',
-  edit日本語: '',
+  editJapanese: '',
   editReading: '',
   editTranslation: '',
-  quiz日本語: '',
+  quizJapanese: '',
   quizReading: '',
   quizTranslation: '',
   suggestions: []
 });
 
-export const properties = Object.freeze(Object.keys(defaults)) as Readonly<Array<keyof AppState>>;
+export type Properties = Readonly<keyof AppState>;
+export const properties = Object.freeze(Object.keys(defaults)) as Readonly<Properties[]>;
+export type PropertiesDict = {[T in Properties]: T };
 
-export type Properties = {[T in keyof AppState]: T };
-
-export const Property: Readonly<Properties> = (() => {
-  const result: Partial<Properties> = {};
-  properties.forEach(key => result[key] = key as any);
-  return result as Properties;
-})();
+export const Property: Readonly<PropertiesDict>
+  = Object.freeze(_(defaults).mapObject(key => key as any));
 
 export type JTDictSeq = string;
 
@@ -89,7 +89,7 @@ export type JTDictReadingInfo = {
   meta?: string[]
 };
 
-export type Phrase = {phrase: string, translation: string};
+export type Card = {japanese?: string, reading?: string, translation?: string};
 export type LessonId = string;
 export type Kanji = string;
 export type Reading = string;
@@ -97,8 +97,9 @@ export type Meaning = Readonly<string[]>;
 export type Lessons = {[id: string]: Lesson};
 export type Quiz = {correct: boolean[]};
 export type EditingTarget = number | 'name' | 'none';
+export type HTMLId = string;
 
 export interface Lesson {
   name: string;
-  questions: Array<JTDictReadingRef | Phrase>;
+  cards: Card[];
 }

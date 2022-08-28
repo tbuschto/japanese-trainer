@@ -1,12 +1,11 @@
-import {useSelector} from 'react-redux';
 import {Action} from './Action';
 import {DATA} from './styles';
 import {createNewLesson, deleteLesson, editLesson, newQuiz} from '../app/actions';
 import {useAppSelector as $} from '../app/hooks';
-import {selectLesson, selectLessons} from '../app/selectors';
+import {selectLesson, selectLessonNames} from '../app/selectors';
 
 export function Lessons() {
-  const lessons = $(selectLessons);
+  const lessons = $(selectLessonNames);
   return (
     <main>
       <table>
@@ -29,7 +28,7 @@ export function Lessons() {
 }
 
 function LessonRow({lessonId}: {lessonId: string}) {
-  const lesson = useSelector(selectLesson(lessonId));
+  const lesson = $(selectLesson(lessonId));
   return (
     <tr>
       <td className={DATA}>
