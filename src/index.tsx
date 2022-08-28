@@ -2,7 +2,7 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import {render} from 'react-dom';
 import {trainer} from './app/JapaneseTrainer';
-import {App} from './views/App';
+import {App} from './App';
 import './index.css';
 
 render((

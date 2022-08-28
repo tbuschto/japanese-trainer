@@ -24,7 +24,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@elements": ["./src/elements/TextInput.tsx"]
+    }
   },
   "include": [
     "src"

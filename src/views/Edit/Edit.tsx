@@ -1,7 +1,7 @@
 import {EditCard} from './EditCard';
 import {LessonOverview} from './LessonOverview';
-import {useAppSelector as $} from '../app/hooks';
-import {selectCurrentLesson, select} from '../app/selectors';
+import {useAppSelector as $} from '../../app/hooks';
+import {selectCurrentLesson, select} from '../../app/selectors';
 
 export function Edit() {
   const currentLesson = $(selectCurrentLesson);

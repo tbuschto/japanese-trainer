@@ -1,10 +1,12 @@
-import {Action} from './Action';
-import {Label} from './styles';
-import {TextInput} from './TextInput';
-import {$, _} from '../app/hooks';
-import {select, selectCardHasChanged, selectCardIsNew, selectEditCardIsValid, selectCurrentLesson, selectEditCardIsEmpty} from '../app/selectors';
-import {cancelEdit, saveEdit} from '../app/actions';
-import {handleInputReading, handleInputTranslation, handleInput日本語 as handleInputJapanese} from '../app/InputHandler';
+import {cancelEdit, saveEdit} from './actions';
+import {handleInputReading, handleInputTranslation, handleInputJapanese} from './eventHandler';
+import {Action} from '../../elements/Action';
+import {Label} from '../../elements/Label';
+import {TextInput} from '../../elements/TextInput';
+import {$, _} from '../../app/hooks';
+import {select, selectCardHasChanged, selectCardIsNew, selectEditCardIsValid, selectCurrentLesson, selectEditCardIsEmpty} from '../../app/selectors';
+import {CLASS_DICTIONARY, CLASS_EDIT_CARD, CLASS_FORM} from '../../app/cssClassNames';
+import {HTMLId} from '../../app/AppState';
 
 export const EditCard = () => {
   const dispatch = _();
@@ -14,29 +16,29 @@ export const EditCard = () => {
   const editReading = $(select.editReading)!;
   const editTranslation = $(select.editTranslation)!;
   return (
-    <div className='editCard'>
+    <div className={CLASS_EDIT_CARD}>
       <h1>
         Lesson {lesson.name} / Card {card}
       </h1>
-      <div className='form'>
+      <div className={CLASS_FORM}>
         <Label>Japanese:</Label>
         <TextInput autoFocus
-            id='editJapanese'
+            id={HTMLId.EditJapanese}
             value={edit日本語}
             onChange={handleInputJapanese(dispatch)}/>
         <Label>Reading:</Label>
         <TextInput
-            id='editReading'
+            id={HTMLId.EditReading}
             value={editReading}
             onChange={handleInputReading(dispatch)}/>
         <Label>Translation:</Label>
         <TextInput
-            id='editTranslation'
+            id={HTMLId.EditTranslation}
             value={editTranslation}
             onChange={handleInputTranslation(dispatch)}/>
         <EditControls/>
       </div>
-      <div className='dictionary'>
+      <div className={CLASS_DICTIONARY}>
         <Label>Dictionary:</Label>
         <ul><li>Items</li></ul>
       </div>

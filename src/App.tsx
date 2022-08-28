@@ -1,12 +1,15 @@
 import {ConnectedRouter} from 'connected-react-router';
 import {Route, Switch} from 'react-router';
-import {Lessons} from './Lessons';
-import {Settings} from './Settings';
-import {Quiz} from './Quiz';
-import {Edit} from './Edit';
-import {NavPoint} from './NavPoint';
-import {RootPath} from '../app/AppState';
-import {trainer} from '../app/JapaneseTrainer';
+import {Lessons} from './views/Lessons/Lessons';
+import {Settings} from './views/Settings/Settings';
+import {Quiz} from './views/Quiz/Quiz';
+import {Edit} from './views/Edit/Edit';
+import {NavPoint} from './elements/NavPoint';
+import {RootPath} from './app/AppState';
+import {trainer} from './app/JapaneseTrainer';
+import {CLASS_LOGO} from './app/cssClassNames';
+
+
 
 export function App() {
   return (
@@ -14,7 +17,7 @@ export function App() {
       <ConnectedRouter history={trainer.history}>
         <>
           <nav>
-            <span className='logo'>くそ日本語</span>
+            <span className={CLASS_LOGO}>くそ日本語</span>
             <NavPoint to={RootPath.Lessons}>Lessons</NavPoint>
             <NavPoint to={RootPath.Quiz}>Quiz</NavPoint>
             <NavPoint to={RootPath.Settings}>Settings</NavPoint>

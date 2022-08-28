@@ -1,8 +1,8 @@
-import {Action} from './Action';
-import {DATA} from './styles';
-import {createNewLesson, deleteLesson, editLesson, newQuiz} from '../app/actions';
-import {useAppSelector as $} from '../app/hooks';
-import {selectLesson, selectLessonNames} from '../app/selectors';
+import {createNewLesson, deleteLesson, editLesson, newQuiz} from './actions';
+import {Action} from '../../elements/Action';
+import {CLASS_DATA} from '../../app/cssClassNames';
+import {useAppSelector as $} from '../../app/hooks';
+import {selectLesson, selectLessonNames} from '../../app/selectors';
 
 export function Lessons() {
   const lessons = $(selectLessonNames);
@@ -31,7 +31,7 @@ function LessonRow({lessonId}: {lessonId: string}) {
   const lesson = $(selectLesson(lessonId));
   return (
     <tr>
-      <td className={DATA}>
+      <td className={CLASS_DATA}>
         {lesson.name}
       </td>
       <td>

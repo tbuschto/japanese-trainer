@@ -13,7 +13,7 @@ export interface AppState {
   readingMode: WordElementMode;
   quiz: Quiz | null;
   hint: string;
-  focus: HTMLId;
+  focus: HTMLId | '';
   editingTarget: EditingTarget;
   inputLessonName: string;
   editJapanese: string;
@@ -33,6 +33,12 @@ export enum RootPath {
   Quiz = '/quiz',
   Lookup = '/lookup',
   Lessons = '/lessons'
+}
+
+export enum HTMLId {
+  EditJapanese = 'editJapanese',
+  EditReading = 'editReading',
+  EditTranslation = 'editTranslation'
 }
 
 export enum WordElementMode {
@@ -97,7 +103,6 @@ export type Meaning = Readonly<string[]>;
 export type Lessons = {[id: string]: Lesson};
 export type Quiz = {correct: boolean[]};
 export type EditingTarget = number | 'name' | 'none';
-export type HTMLId = string;
 
 export interface Lesson {
   name: string;

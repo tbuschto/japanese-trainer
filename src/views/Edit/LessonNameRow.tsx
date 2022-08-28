@@ -1,10 +1,11 @@
-import {Action} from './Action';
-import {DATA, Label, LESSON} from './styles';
-import {TextInput} from './TextInput';
-import {cancelEdit, acceptInputLessonName, editName} from '../app/actions';
-import {handleInputLessonName} from '../app/InputHandler';
-import {$, _} from '../app/hooks';
-import {select, selectCurrentLesson} from '../app/selectors';
+import {handleInputLessonName} from './eventHandler';
+import {cancelEdit, acceptInputLessonName, editName} from './actions';
+import {Action} from '../../elements/Action';
+import {CLASS_DATA, CLASS_LESSON} from '../../app/cssClassNames';
+import {Label} from '../../elements/Label';
+import {TextInput} from '../../elements/TextInput';
+import {$, _} from '../../app/hooks';
+import {select, selectCurrentLesson} from '../../app/selectors';
 
 export function LessonNameRow() {
   return $(select.editingTarget) === 'name'
@@ -16,9 +17,9 @@ function NameViewRow() {
   const lesson = $(selectCurrentLesson)!;
   return (
     <tr>
-      <td colSpan={2} className={DATA}>
+      <td colSpan={2} className={CLASS_DATA}>
         <LessonLabel/>
-        <span className={LESSON}>
+        <span className={CLASS_LESSON}>
           {lesson.name}
         </span>
       </td>
@@ -48,9 +49,9 @@ function NameEditRow() {
       <td>
         <LessonLabel/>
       </td>
-      <td className={DATA}>
+      <td className={CLASS_DATA}>
         <TextInput
-          className={LESSON}
+          className={CLASS_LESSON}
           onChange={handleInputLessonName(dispatch)}
           onKeyDown={keyHandler}
           placeholder={lesson.name}

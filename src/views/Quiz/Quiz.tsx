@@ -1,5 +1,5 @@
-import {useAppSelector} from '../app/hooks';
-import {selectCurrentLesson} from '../app/selectors';
+import {useAppSelector} from '../../app/hooks';
+import {selectCurrentLesson} from '../../app/selectors';
 
 export function Quiz() {
   const lesson = useAppSelector(selectCurrentLesson);

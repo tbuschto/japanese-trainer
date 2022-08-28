@@ -1,6 +1,7 @@
 import {focusable} from './focusable';
 import {Action as ReduxAction} from '../app/Action';
 import {useAppDispatch} from '../app/hooks';
+import {CLASS_ACTION} from '../app/cssClassNames';
 
 const SPACE = ' ';
 
@@ -25,7 +26,7 @@ export function Action({children: text, action, enabled, id}: ActionProperties) 
   const state = disabled ? 'disabled' : 'enabled';
   return (
     <span {...focusable({id, tabIndex: 0})}
-        className={`action ${state}`}
+        className={[CLASS_ACTION, state].join(' ')}
         onClick={() => disabled || dispatch(action())}
         onKeyUp={keyHandler}>
       {text}

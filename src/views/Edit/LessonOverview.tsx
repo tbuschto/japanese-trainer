@@ -1,10 +1,11 @@
-import {Action} from './Action';
 import {LessonNameRow} from './LessonNameRow';
-import {Label} from './styles';
-import {deleteCard, editCard, newCard} from '../app/actions';
-import {$} from '../app/hooks';
-import {selectCards} from '../app/selectors';
-import {Card} from '../app/AppState';
+import {deleteCard, editCard, newCard} from './actions';
+import {Action} from '../../elements/Action';
+import {Label} from '../../elements/Label';
+import {$} from '../../app/hooks';
+import {selectCards} from '../../app/selectors';
+import {Card} from '../../app/AppState';
+import {CLASS_NUMBER, CLASS_TITLE} from '../../app/cssClassNames';
 
 export const LessonOverview = () => {
   const cards = $(selectCards);
@@ -33,8 +34,8 @@ const CardsHeaderRow = () => <tr>
 
 const CardRow = ({card, index}: {card: Card, index: number}) => <tr>
   <td colSpan={2}>
-    <span className='number'>{index + ' )'}</span>
-    <span className='title'>{card.japanese}</span>
+    <span className={CLASS_NUMBER}>{index + ' )'}</span>
+    <span className={CLASS_TITLE}>{card.japanese}</span>
   </td>
   <td>
     <Action id='editCard' action={() => editCard(index)}>Edit</Action>
