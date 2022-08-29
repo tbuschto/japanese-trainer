@@ -1,40 +1,45 @@
-import {cancelEdit, saveEdit} from './actions';
+import {cancelEdit, nextCard, prevCard, saveEdit} from './actions';
 import {handleInputReading, handleInputTranslation, handleInputJapanese} from './eventHandler';
 import {Action} from '../../elements/Action';
 import {Label} from '../../elements/Label';
 import {TextInput} from '../../elements/TextInput';
 import {$, _} from '../../app/hooks';
-import {select, selectCardHasChanged, selectCardIsNew, selectEditCardIsValid, selectCurrentLesson, selectEditCardIsEmpty} from '../../app/selectors';
+import {select, selectCardHasChanged, selectCardIsNew, selectEditCardIsValid, selectCurrentLesson, selectEditCardIsEmpty, selectHasPrevCard, selectHasNextCard} from '../../app/selectors';
 import {CLASS_DICTIONARY, CLASS_EDIT_CARD, CLASS_FORM} from '../../app/cssClassNames';
 import {HTMLId} from '../../app/AppState';
 
 export const EditCard = () => {
   const dispatch = _();
-  const lesson = $(selectCurrentLesson)!;
-  const card = $(select.currentQuizCard);
-  const edit日本語 = $(select.editJapanese)!;
-  const editReading = $(select.editReading)!;
-  const editTranslation = $(select.editTranslation)!;
   return (
     <div className={CLASS_EDIT_CARD}>
       <h1>
-        Lesson {lesson.name} / Card {card}
+        <span className='lessonName'>{$(selectCurrentLesson)!.name}</span>
+        <span className='sep'>|</span>
+        <Action action={prevCard} enabled={$(selectHasPrevCard)}>
+          &#129128;
+        </Action>
+        <span className='cardIndex'>
+          &nbsp;Card {$(select.editingTarget) as number + 1}&nbsp;
+        </span>
+        <Action action={nextCard} enabled={$(selectHasNextCard)}>
+          &#129130;
+        </Action>
       </h1>
       <div className={CLASS_FORM}>
         <Label>Japanese:</Label>
         <TextInput autoFocus
             id={HTMLId.EditJapanese}
-            value={edit日本語}
+            value={$(select.editJapanese)!}
             onChange={handleInputJapanese(dispatch)}/>
         <Label>Reading:</Label>
         <TextInput
             id={HTMLId.EditReading}
-            value={editReading}
+            value={$(select.editReading)!}
             onChange={handleInputReading(dispatch)}/>
         <Label>Translation:</Label>
         <TextInput
             id={HTMLId.EditTranslation}
-            value={editTranslation}
+            value={$(select.editTranslation)!}
             onChange={handleInputTranslation(dispatch)}/>
         <EditControls/>
       </div>

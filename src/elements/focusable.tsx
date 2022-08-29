@@ -2,6 +2,7 @@ import {HTMLAttributes, useEffect, useRef} from 'react';
 import {select} from '../app/selectors';
 import {$, _} from '../app/hooks';
 import {setProperty} from '../app/actions';
+import {HTMLId} from '../app/AppState';
 
 export function focusable<T extends HTMLAttributes<HTMLElement>>(attr: T): T {
   const dispatch = _();
@@ -9,7 +10,7 @@ export function focusable<T extends HTMLAttributes<HTMLElement>>(attr: T): T {
   const focusEffect = {
     onFocus: () => {
       if (attr.id) {
-        dispatch(setProperty('focus', attr.id || ''));
+        dispatch(setProperty('focus', attr.id as HTMLId || ''));
       }
     },
     ref: useRef<HTMLInputElement>(null),

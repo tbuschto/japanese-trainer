@@ -5,8 +5,15 @@ import {selectCardIsNew, selectCards, selectCurrentEditCard, selectCurrentLesson
 
 export const newCard: CThunk = () => (dispatch, getState) => {
   const cards = selectCurrentLesson(getState())!.cards!;
-  dispatch(setEditingTarget(cards.length));
-  dispatch(setProperty('focus', HTMLId.EditJapanese));
+  dispatch(editCard(cards.length));
+};
+
+export const nextCard: CThunk = () => (dispatch, getState) => {
+  dispatch(editCard(getState().editingTarget as number + 1));
+};
+
+export const prevCard: CThunk = () => (dispatch, getState) => {
+  dispatch(editCard(getState().editingTarget as number - 1));
 };
 
 export const deleteCard: CThunk<number> = (index: number) => (dispatch, getState) => {
@@ -21,6 +28,7 @@ export const editCard: CThunk<number> = (index: number) => (dispatch, getState) 
   dispatch(setProperty('editReading', card?.reading || ''));
   dispatch(setProperty('editTranslation', card?.translation || ''));
   dispatch(setProperty('editJapanese', card?.japanese || ''));
+  dispatch(setProperty('focus', HTMLId.EditJapanese));
 };
 
 export const saveEdit: CThunk = () => (dispatch, getState) => {

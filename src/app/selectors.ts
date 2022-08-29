@@ -42,6 +42,18 @@ export const selectEditCardIsEmpty = (state: AppState) =>
 export const selectCardIsNew = (state: AppState) =>
   selectCurrentLesson(state)?.cards.length === state.editingTarget;
 
+export const selectHasNextCard = (state: AppState) => {
+  const lesson = selectCurrentLesson(state);
+  const index = state.editingTarget;
+  return (!!lesson) && (typeof index === 'number') && (index < lesson.cards.length - 1);
+};
+
+export const selectHasPrevCard = (state: AppState) => {
+  const lesson = selectCurrentLesson(state);
+  const index = state.editingTarget;
+  return (!!lesson) && (typeof index === 'number') && (index > 0);
+};
+
 export const selectCardHasChanged = (state: AppState) => {
   const card = selectCurrentEditCard(state) || {};
   return state.editJapanese !== card.japanese

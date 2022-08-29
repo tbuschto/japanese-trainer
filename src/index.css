@@ -70,6 +70,11 @@ h1 {
   color: orangered;
 }
 
+h1 .action {
+  color: inherit;
+}
+
+
 .label {
   margin: 4px;
   font-weight: bold;
@@ -154,8 +159,17 @@ main table .title {
   flex: 1 100%;
 }
 
+.editCard .cardIndex {
+  user-select: none;
+}
+
 .sep {
   user-select: none;
+}
+
+.editCard .sep {
+  margin-left: 14px;
+  margin-right: 8px;;
 }
 
 .editCard .form {
