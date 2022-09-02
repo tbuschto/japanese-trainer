@@ -11,7 +11,7 @@ export function Lessons() {
       <table>
         <tbody>
           {lessons.map(lessonId =>
-            <LessonRow lessonId={lessonId}/>
+            <LessonRow lessonId={lessonId} key={lessonId}/>
           )}
           <tr>
             <td>

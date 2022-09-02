@@ -1,7 +1,7 @@
 import {CAction, CThunk} from '../../app/Action';
 import {setLessonProperty, setProperty} from '../../app/actions';
 import {Card, EditingTarget, HTMLId} from '../../app/AppState';
-import {selectCardIsNew, selectCards, selectCurrentEditCard, selectCurrentLesson} from '../../app/selectors';
+import {generateId, selectCardIsNew, selectCards, selectCurrentEditCard, selectCurrentLesson} from '../../app/selectors';
 
 export const newCard: CThunk = () => (dispatch, getState) => {
   const cards = selectCurrentLesson(getState())!.cards!;
@@ -39,10 +39,13 @@ export const saveEdit: CThunk = () => (dispatch, getState) => {
   const cardIsNew = selectCardIsNew(state);
   if (!lesson) throw new Error('No lesson selected');
   const cards = lesson.cards.concat();
-  const card: Card = {};
-  card.japanese = state.editJapanese;
-  card.reading = state.editReading;
-  card.translation = state.editTranslation;
+  const oldCard = cards[editingTarget] as Card | undefined;
+  const card: Card = {
+    id: oldCard?.id || generateId(cards.map(({id}) => id)),
+    japanese: state.editJapanese,
+    reading: state.editReading,
+    translation: state.editTranslation
+  };
   cards[editingTarget] = card;
   dispatch(setLessonProperty({cards}));
   dispatch(cancelEdit());

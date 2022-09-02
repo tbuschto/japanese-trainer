@@ -2,21 +2,18 @@ import {push} from 'connected-react-router';
 import {ActionType, CAction, CThunk} from '../../app/Action';
 import {setProperty} from '../../app/actions';
 import {Lesson, LessonId, RootPath} from '../../app/AppState';
-import {selectCurrentLesson} from '../../app/selectors';
+import {generateId, selectCurrentLesson} from '../../app/selectors';
 import {editName} from '../Edit/actions';
 
 export const createNewLesson: CThunk = () => (dispatch, getState) => {
-  const state = getState();
-  const lastId = Object.keys(state.lessons)
-    .map(id => parseInt(id, 10))
-    .reduce((a, b) => Math.max(a, b), 0);
-  const id = (lastId + 1).toString();
+  const {lessons} = getState();
+  const newId = generateId(Object.keys(lessons));
   const newLesson: Lesson = {
-    name: 'Lesson ' + id,
+    name: 'Lesson ' + newId,
     cards: []
   };
-  dispatch(setProperty('lessons', {[id]: newLesson, ...state.lessons}));
-  dispatch(setProperty('currentLesson', id));
+  dispatch(setProperty('lessons', {[newId]: newLesson, ...lessons}));
+  dispatch(setProperty('currentLesson', newId));
   dispatch(push(RootPath.Edit));
   dispatch(editName());
   dispatch(setProperty('inputLessonName', ''));

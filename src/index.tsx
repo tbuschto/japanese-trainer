@@ -4,6 +4,11 @@ import {render} from 'react-dom';
 import {trainer} from './app/JapaneseTrainer';
 import {App} from './App';
 import './index.css';
+import {japanese} from './worker';
+
+(async () => {
+  console.info(await japanese.test('日本語'));
+})().catch(ex => console.error(ex));
 
 render((
   <React.StrictMode>
@@ -12,12 +17,3 @@ render((
     </Provider>
   </React.StrictMode>
 ), document.getElementById('root'));
-
-// https://github.com/supasate/connected-react-router/issues/570
-declare module 'connected-react-router' {
-
-  interface ConnectedRouterProps {
-    children?: JSX.Element;
-  }
-
-}

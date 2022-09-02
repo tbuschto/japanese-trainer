@@ -9,8 +9,6 @@ import {RootPath} from './app/AppState';
 import {trainer} from './app/JapaneseTrainer';
 import {CLASS_LOGO} from './app/cssClassNames';
 
-
-
 export function App() {
   return (
     <>

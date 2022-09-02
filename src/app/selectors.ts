@@ -55,11 +55,22 @@ export const selectHasPrevCard = (state: AppState) => {
 };
 
 export const selectCardHasChanged = (state: AppState) => {
-  const card = selectCurrentEditCard(state) || {};
-  return state.editJapanese !== card.japanese
+  const card = selectCurrentEditCard(state);
+  return !card
+    || state.editJapanese !== card.japanese
     || state.editReading !== (card.reading || '')
     || state.editTranslation !== card.translation;
 };
+
+export function generateId(ids: string[]) {
+  const lastId = ids.map(id => parseInt(id, 10))
+    .map(index => isNaN(index) ? 0 : index)
+    .reduce((a, b) => Math.max(a, b), 0);
+  if (isNaN(lastId)) {
+    throw new Error('Failed to generate id');
+  }
+  return (lastId + 1).toString();
+}
 
 export type Selector<T extends keyof AppState> = (state: AppState) => AppState[T];
 type SelectorDict = Readonly<{[T in keyof AppState]: Selector<T>}>;

@@ -95,7 +95,12 @@ export type JTDictReadingInfo = {
   meta?: string[]
 };
 
-export type Card = {japanese?: string, reading?: string, translation?: string};
+export type Card = {
+  id: string,
+  japanese?: string,
+  reading?: string,
+  translation?: string
+};
 export type LessonId = string;
 export type Kanji = string;
 export type Reading = string;
