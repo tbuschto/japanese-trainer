@@ -1,4 +1,4 @@
-import {cancelEdit, nextCard, prevCard, saveEdit} from './actions';
+import {autoFillReading, cancelEdit, nextCard, prevCard, saveEdit} from './actions';
 import {handleInputReading, handleInputTranslation, handleInputJapanese} from './eventHandler';
 import {
   selectCardHasChanged, selectCardIsNew, selectEditCardIsValid,
@@ -42,6 +42,7 @@ export const EditCard = () => {
             label='Reading:'
             error={$(selectReadingValidationError)}
             value={$(select.editReading)!}
+            onFocus={() => dispatch(autoFillReading())}
             onChange={handleInputReading(dispatch)}/>
         <LabeledTextInput
             id={HTMLId.EditTranslation}

@@ -3,6 +3,7 @@ import {CAction, CThunk} from '../../app/Action';
 import {setLessonProperty, setProperty} from '../../app/actions';
 import {Card, EditingTarget, HTMLId} from '../../app/AppState';
 import {generateId, selectCards, selectCurrentLesson} from '../../app/selectors';
+import {worker} from '../../worker';
 
 export const newCard: CThunk = () => (dispatch, getState) => {
   const cards = selectCurrentLesson(getState())!.cards!;
@@ -81,4 +82,16 @@ export const acceptInputLessonName: CThunk = () => (dispatch, getState) => {
   }
   dispatch(setLessonProperty({name: value}));
   dispatch(setEditingTarget('none'));
+};
+
+export const autoFillReading: CThunk = () => async (dispatch, getState) => {
+  const orgState = getState();
+  if (orgState.editReading || !orgState.editJapanese) {
+    return;
+  }
+  const reading = await worker.toHiragana(orgState.editJapanese);
+  const state = getState();
+  if (orgState.editJapanese === state.editJapanese && !state.editReading) {
+    dispatch(setProperty('editReading', reading));
+  }
 };

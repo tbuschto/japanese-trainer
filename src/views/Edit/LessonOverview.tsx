@@ -15,7 +15,7 @@ export const LessonOverview = () => {
         <LessonNameRow/>
         <CardsHeaderRow/>
         {
-          cards.map((card, i) => <CardRow card={card} index={i + 1} key={card.id}/>)
+          cards.map((card, i) => <CardRow card={card} index={i} key={card.id}/>)
         }
         <NewCardRow/>
       </tbody>
@@ -34,7 +34,7 @@ const CardsHeaderRow = () => <tr>
 
 const CardRow = ({card, index}: {card: Card, index: number}) => <tr>
   <td colSpan={2}>
-    <span className={CLASS_NUMBER}>{index + ' )'}</span>
+    <span className={CLASS_NUMBER}>{index + 1} )</span>
     <span className={CLASS_TITLE}>{card.japanese}</span>
   </td>
   <td>

@@ -4,6 +4,7 @@ import {selectCurrentLesson} from '../../app/selectors';
 
 const {hasJapanese, isKana} = Kuroshiro.Util;
 const hasRomaji = (str: string) => /[a-zA-Z]/.test(str);
+const jMisc = '、,。ー！？・　 '.split('');
 
 export const selectCurrentEditCard = (state: AppState) => {
   const {currentLesson, lessons, editingTarget} = state;
@@ -48,7 +49,7 @@ export const selectJapaneseValidationError = ({editJapanese: text}: AppState): s
 };
 
 export const selectReadingValidationError = ({editReading: text}: AppState): string => {
-  if (!text.split('').every(char => !char || isKana(char))) {
+  if (!text.split('').every(char => isKana(char) || jMisc.includes(char))) {
     return 'Only kana allowed';
   }
   return '';
