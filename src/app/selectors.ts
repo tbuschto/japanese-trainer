@@ -24,44 +24,6 @@ export const selectCurrentQuizCard = (state: AppState) => {
   return lesson.cards[qIndex];
 };
 
-export const selectCurrentEditCard = (state: AppState) => {
-  const {currentLesson, lessons, editingTarget} = state;
-  if (!currentLesson || typeof editingTarget !== 'number') {
-    return null;
-  }
-  const lesson = lessons[currentLesson];
-  return lesson.cards[editingTarget];
-};
-
-export const selectEditCardIsValid = (state: AppState) =>
-  !!(state.editTranslation && state.editJapanese);
-
-export const selectEditCardIsEmpty = (state: AppState) =>
-  !(state.editTranslation || state.editJapanese || state.editReading);
-
-export const selectCardIsNew = (state: AppState) =>
-  selectCurrentLesson(state)?.cards.length === state.editingTarget;
-
-export const selectHasNextCard = (state: AppState) => {
-  const lesson = selectCurrentLesson(state);
-  const index = state.editingTarget;
-  return (!!lesson) && (typeof index === 'number') && (index < lesson.cards.length - 1);
-};
-
-export const selectHasPrevCard = (state: AppState) => {
-  const lesson = selectCurrentLesson(state);
-  const index = state.editingTarget;
-  return (!!lesson) && (typeof index === 'number') && (index > 0);
-};
-
-export const selectCardHasChanged = (state: AppState) => {
-  const card = selectCurrentEditCard(state);
-  return !card
-    || state.editJapanese !== card.japanese
-    || state.editReading !== (card.reading || '')
-    || state.editTranslation !== card.translation;
-};
-
 export function generateId(ids: string[]) {
   const lastId = ids.map(id => parseInt(id, 10))
     .map(index => isNaN(index) ? 0 : index)

@@ -11,6 +11,11 @@
   "eslint.format.enable": true,
   "eslint.lintTask.enable": true,
   "cSpell.words": [
-    "Persistor"
+    "furigana",
+    "Hiragna",
+    "kuroshiro",
+    "okurigana",
+    "Persistor",
+    "Romaji"
   ]
 }

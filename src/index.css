@@ -81,6 +81,11 @@ h1 .action {
   user-select: none;
 }
 
+.invalid {
+  font-size: small;
+  color: red;
+}
+
 main {
   display: flex;
   flex-flow: column;

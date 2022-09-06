@@ -1,10 +1,15 @@
 import {cancelEdit, nextCard, prevCard, saveEdit} from './actions';
 import {handleInputReading, handleInputTranslation, handleInputJapanese} from './eventHandler';
+import {
+  selectCardHasChanged, selectCardIsNew, selectEditCardIsValid,
+  selectEditCardIsEmpty, selectHasPrevCard, selectHasNextCard,
+  selectJapaneseValidationError, selectReadingValidationError, selectTranslationValidationError
+} from './selectors';
 import {Action} from '../../elements/Action';
 import {Label} from '../../elements/Label';
-import {TextInput} from '../../elements/TextInput';
+import {LabeledTextInput} from '../../elements/TextInput';
 import {$, _} from '../../app/hooks';
-import {select, selectCardHasChanged, selectCardIsNew, selectEditCardIsValid, selectCurrentLesson, selectEditCardIsEmpty, selectHasPrevCard, selectHasNextCard} from '../../app/selectors';
+import {select, selectCurrentLesson} from '../../app/selectors';
 import {CLASS_DICTIONARY, CLASS_EDIT_CARD, CLASS_FORM} from '../../app/cssClassNames';
 import {HTMLId} from '../../app/AppState';
 
@@ -26,19 +31,22 @@ export const EditCard = () => {
         </Action>
       </h1>
       <div className={CLASS_FORM}>
-        <Label>Japanese:</Label>
-        <TextInput autoFocus
+        <LabeledTextInput autoFocus
             id={HTMLId.EditJapanese}
+            label='Japanese:'
+            error={$(selectJapaneseValidationError)}
             value={$(select.editJapanese)!}
             onChange={handleInputJapanese(dispatch)}/>
-        <Label>Reading:</Label>
-        <TextInput
+        <LabeledTextInput
             id={HTMLId.EditReading}
+            label='Reading:'
+            error={$(selectReadingValidationError)}
             value={$(select.editReading)!}
             onChange={handleInputReading(dispatch)}/>
-        <Label>Translation:</Label>
-        <TextInput
+        <LabeledTextInput
             id={HTMLId.EditTranslation}
+            label='Translation:'
+            error={$(selectTranslationValidationError)}
             value={$(select.editTranslation)!}
             onChange={handleInputTranslation(dispatch)}/>
         <EditControls/>

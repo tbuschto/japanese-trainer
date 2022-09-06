@@ -15,7 +15,7 @@ export const LessonOverview = () => {
         <LessonNameRow/>
         <CardsHeaderRow/>
         {
-          cards.map((card, i) => <CardRow card={card} index={i} key={card.id}/>)
+          cards.map((card, i) => <CardRow card={card} index={i + 1} key={card.id}/>)
         }
         <NewCardRow/>
       </tbody>

@@ -1,23 +1,48 @@
 import {expose} from 'comlink';
-import * as kuromoji from 'kuromoji';
+import Kuroshiro from 'kuroshiro';
+import KuromojiAnalyzer from 'kuroshiro-analyzer-kuromoji';
 
-const tokenizer: Promise<kuromoji.Tokenizer<kuromoji.IpadicFeatures>> = new Promise(
-  (resolve, reject) =>
-    kuromoji.builder({
-      dicPath: '/dict/kuromoji/'
-    }).build((err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    })
-);
+// const tokenizer: Promise<kuromoji.Tokenizer<kuromoji.IpadicFeatures>> = new Promise(
+//   (resolve, reject) =>
+//     kuromoji.builder({
+//       dicPath: '/dict/kuromoji/'
+//     }).build((err, result) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(result);
+//       }
+//     })
+// );
+
+const kuroshiro = new Kuroshiro();
+
+const ready = new Promise((resolve, reject) => {
+  try {
+    kuroshiro.init(
+      new KuromojiAnalyzer({dictPath: '/dict/kuromoji/'})
+    ).then(resolve, reject);
+  } catch (ex) {
+    reject(ex);
+  }
+});
+
+// kuromoji.builder({
+//   dicPath: '/dict/kuromoji/'
+// }).build((err, result) => {
+//   if (err) {
+//     reject(err);
+//   } else {
+//     resolve(result);
+//   }
+// })
+// );
 
 const japanese = {
 
-  async test(text: string) {
-    return (await tokenizer).tokenize(text);
+  async toHiragana(text: string) {
+    await ready;
+    return kuroshiro.convert(text, {to: 'hiragana', mode: 'spaced'});
   }
 
 };

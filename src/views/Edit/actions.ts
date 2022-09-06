@@ -1,7 +1,8 @@
+import {selectCardIsNew, selectCurrentEditCard} from './selectors';
 import {CAction, CThunk} from '../../app/Action';
 import {setLessonProperty, setProperty} from '../../app/actions';
 import {Card, EditingTarget, HTMLId} from '../../app/AppState';
-import {generateId, selectCardIsNew, selectCards, selectCurrentEditCard, selectCurrentLesson} from '../../app/selectors';
+import {generateId, selectCards, selectCurrentLesson} from '../../app/selectors';
 
 export const newCard: CThunk = () => (dispatch, getState) => {
   const cards = selectCurrentLesson(getState())!.cards!;
