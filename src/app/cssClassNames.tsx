@@ -5,6 +5,7 @@ export const CLASS_LOGO = 'logo';
 export const CLASS_ACTION = 'action';
 export const CLASS_EDIT_CARD = 'editCard';
 export const CLASS_DICTIONARY = 'dictionary';
+export const CLASS_DICT_BG = 'dictBg';
 export const CLASS_FORM = 'form';
 export const CLASS_NUMBER = 'number';
 export const CLASS_TITLE = 'title';

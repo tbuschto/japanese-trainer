@@ -1,4 +1,4 @@
-import {createNewLesson, deleteLesson, editLesson, newQuiz} from './actions';
+import {createNewLesson, deleteLesson, editLesson, newQuiz} from './lessonsActions';
 import {Action} from '../../elements/Action';
 import {CLASS_DATA} from '../../app/cssClassNames';
 import {useAppSelector as $} from '../../app/hooks';

@@ -48,6 +48,7 @@ h1 {
 .navPoint:hover {
   color: orangered;
   user-select: none;
+  text-shadow: orangered 0px 0px 1px;
 }
 
 .navPoint.selected {
@@ -68,6 +69,7 @@ h1 {
 
 .action:hover {
   color: orangered;
+  text-shadow: orangered 0px 0px 2px;
 }
 
 h1 .action {
@@ -109,6 +111,8 @@ main table tr:hover {
 }
 
 main table td {
+  word-break: keep-all;
+  white-space: nowrap;
   border-bottom: 1px solid white;
 }
 
@@ -194,12 +198,62 @@ main table .title {
   flex: 1 40%;
   display: flex;
   flex-flow: column;
-  flex: 1 40%;
   row-gap: 2px;
 }
 
-.editCard ul {
-  background: #222222;
+.editCard .dictBg {
+  background: #212529;
   height: 300px;
+  width: 400px;
   margin: 0px;
+  padding: 0px;
+}
+
+.editCard ul {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+  mask-image: linear-gradient(black 90%, transparent);
+}
+
+.editCard li {
+  padding: 8px;
+  margin: 0px 24px 0px 24px;
+  line-height: 140%;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  flex-flow: row;
+}
+
+.editCard li.selected {
+  color: #ff8c00ee;
+}
+
+.editCard li:hover {
+  color: orangered;
+  text-shadow: orangered 0px 0px 1px;
+}
+
+.editCard li .info {
+  left: 0px;
+  right: 20px;
+}
+
+.editCard li .enter {
+  position: relative;
+  /* translate: 345px 0px;
+  display: block; */
+  font-size: 24px;
+  /* transition-property: translate; */
+  visibility: hidden;
+}
+
+.editCard  li.selected .enter {
+  visibility: visible;
 }

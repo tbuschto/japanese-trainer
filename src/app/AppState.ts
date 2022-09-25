@@ -22,7 +22,8 @@ export interface AppState {
   quizJapanese: string;
   quizReading: string;
   quizTranslation: string;
-  suggestions: JTDictReadingRef[];
+  suggestions: JTDictReadingInfo[];
+  suggestionsSelection: number;
 }
 
 export enum RootPath {
@@ -38,7 +39,9 @@ export enum RootPath {
 export enum HTMLId {
   EditJapanese = 'editJapanese',
   EditReading = 'editReading',
-  EditTranslation = 'editTranslation'
+  EditTranslation = 'editTranslation',
+  SaveCardEdit = 'saveCardEdit',
+  CancelCardEdit = 'CancelCardEdit'
 }
 
 export enum WordElementMode {
@@ -67,7 +70,8 @@ export const defaults: Readonly<AppState> = Object.freeze({
   quizJapanese: '',
   quizReading: '',
   quizTranslation: '',
-  suggestions: []
+  suggestions: [],
+  suggestionsSelection: -1
 });
 
 export type Properties = Readonly<keyof AppState>;
@@ -90,9 +94,11 @@ export type JTDictEntry = {
 export type JTDictReadingRef = {id: JTDictSeq, reading: string};
 
 export type JTDictReadingInfo = {
-  kanji?: string,
+  reading: string,
+  kanji?: string[],
   meaning: string[],
-  meta?: string[]
+  meta?: string[],
+  weight?: number
 };
 
 export type Card = {

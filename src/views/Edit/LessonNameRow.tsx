@@ -1,5 +1,5 @@
 import {handleInputLessonName} from './eventHandler';
-import {cancelEdit, acceptInputLessonName, editName} from './actions';
+import {actions} from './editActions';
 import {Action} from '../../elements/Action';
 import {CLASS_DATA, CLASS_LESSON} from '../../app/cssClassNames';
 import {Label} from '../../elements/Label';
@@ -24,7 +24,7 @@ function NameViewRow() {
         </span>
       </td>
       <td>
-        <Action id='editLessonName' action={editName}>Edit</Action>
+        <Action id='editLessonName' action={actions.editName}>Edit</Action>
       </td>
       <td></td>
     </tr>
@@ -38,18 +38,16 @@ function NameEditRow() {
   const keyHandler = (ev: React.KeyboardEvent) => {
     if (ev.key === 'Enter') {
       ev.preventDefault();
-      dispatch(acceptInputLessonName());
+      dispatch(actions.acceptInputLessonName());
     } else if (ev.key === 'Escape') {
       ev.preventDefault();
-      dispatch(cancelEdit());
+      dispatch(actions.cancelEdit());
     }
   };
   return (
     <tr>
-      <td>
+      <td colSpan={2} className={CLASS_DATA}>
         <LessonLabel/>
-      </td>
-      <td className={CLASS_DATA}>
         <TextInput
           className={CLASS_LESSON}
           onChange={handleInputLessonName(dispatch)}
@@ -59,10 +57,10 @@ function NameEditRow() {
           autoFocus/>
       </td>
       <td>
-        <Action action={acceptInputLessonName}>Save</Action>
+        <Action action={actions.acceptInputLessonName}>Save</Action>
       </td>
       <td>
-        <Action action={cancelEdit}>Cancel</Action>
+        <Action action={actions.cancelEdit}>Cancel</Action>
       </td>
     </tr>
   );

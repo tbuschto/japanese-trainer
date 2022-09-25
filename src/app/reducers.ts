@@ -12,7 +12,7 @@ export function createReducer(router: Reducer<RouterState<unknown>>) {
     newState.router = router(oldState.router, action);
     let changed = newState.router !== oldState.router;
     if (action.type === ActionType.SetProperty) {
-      const {property, value} = action.payload;
+      const {property, value} = action;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (newState[property] as any) = value;
       changed = changed || (newState[property] !== oldState[property]);

@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import {AppState, defaults, Lesson} from './AppState';
+import {AppState, defaults, JTDictReadingInfo, Lesson} from './AppState';
 
 export const selectLesson = (id: string) => ({lessons}: AppState) => lessons[id];
 
@@ -22,6 +22,13 @@ export const selectCurrentQuizCard = (state: AppState) => {
   const lesson = state.lessons[state.currentLesson];
   const qIndex = state.currentQuizCard || 0;
   return lesson.cards[qIndex];
+};
+
+export const selectSelectedSuggestion = (state: AppState): JTDictReadingInfo | null => {
+  if (state.suggestionsSelection < 0) {
+    return null;
+  }
+  return state.suggestions[state.suggestionsSelection] || null;
 };
 
 export function generateId(ids: string[]) {

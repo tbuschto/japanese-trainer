@@ -1,7 +1,7 @@
 import React, {HTMLAttributes, useEffect, useRef} from 'react';
 import {select} from '../app/selectors';
 import {$, _} from '../app/hooks';
-import {setProperty} from '../app/actions';
+import {setProperty} from '../app/Action';
 import {HTMLId} from '../app/AppState';
 
 export function focusable<T extends HTMLAttributes<HTMLElement>>(
