@@ -151,7 +151,6 @@ function readingWeight(info: JTDictReadingInfo, partial: string, variants: strin
     return 10000;
   }
   if (variants.some(variant => variant === info.reading)) {
-    console.log(info.reading);
     return 1000;
   }
   return (100 - info.reading.length);
