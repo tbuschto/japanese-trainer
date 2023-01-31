@@ -4,7 +4,7 @@ import {Action} from '../../elements/Action';
 import {CLASS_DATA, CLASS_LESSON} from '../../app/cssClassNames';
 import {Label} from '../../elements/Label';
 import {TextInput} from '../../elements/TextInput';
-import {$, _} from '../../app/hooks';
+import {$, useAppDispatch} from '../../app/hooks';
 import {select, selectCurrentLesson} from '../../app/selectors';
 
 export function LessonNameRow() {
@@ -34,7 +34,7 @@ function NameViewRow() {
 function NameEditRow() {
   const lesson = $(selectCurrentLesson)!;
   const newName = $(select.inputLessonName)!;
-  const dispatch = _();
+  const dispatch = useAppDispatch();
   const keyHandler = (ev: React.KeyboardEvent) => {
     if (ev.key === 'Enter') {
       ev.preventDefault();

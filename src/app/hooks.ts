@@ -17,4 +17,3 @@ export const useInput = (init: string): State<string> => {
 
 // Shortcuts:
 export const $ = useAppSelector;
-export const _ = useAppDispatch;

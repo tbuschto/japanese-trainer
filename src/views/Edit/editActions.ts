@@ -1,8 +1,8 @@
 import KuroShiro from 'kuroshiro';
-import {selectCardIsNew, selectCurrentEditCard} from './editSelectors';
+import {selectCardHasChanged, selectCardIsNew, selectCurrentEditCard, selectEditCardIsValid} from './editSelectors';
 import {actionCreators as actionCreators, Dispatch, GetState, set, setLessonProperty} from '../../app/Action';
 import {Card, EditingTarget, HTMLId, JTDictReadingInfo} from '../../app/AppState';
-import {generateId, selectCards, selectCurrentLesson} from '../../app/selectors';
+import {generateId, selectCards, selectCurrentLesson, selectSelectedSuggestion} from '../../app/selectors';
 import {worker} from '../../worker';
 
 const {hasKanji} = KuroShiro.Util;
@@ -143,6 +143,24 @@ export const actions = actionCreators({
     }
   },
 
+  acceptSuggestion: () => (dispatch: Dispatch, getState: GetState) => {
+    const info = selectSelectedSuggestion(getState());
+    if (info) {
+      dispatch(actions.fillDictEntry(info));
+    }
+  },
+
+  focusNextAction: () => (dispatch: Dispatch, getState: GetState) => {
+    const state = getState();
+    const cardHasChanged = selectCardHasChanged(state);
+    const cardIsValid = selectEditCardIsValid(state);
+    if (cardHasChanged && cardIsValid) {
+      dispatch(set.focus(HTMLId.SaveCardEdit));
+    } else if (!cardHasChanged) {
+      dispatch(set.focus(HTMLId.CancelCardEdit));
+    }
+  },
+
   fillDictEntry: (info: JTDictReadingInfo) => (dispatch: Dispatch) => {
     const kanji = info.kanji?.join(', ');
     const japanese = kanji || info.reading;
@@ -150,7 +168,6 @@ export const actions = actionCreators({
     dispatch(set.editJapanese(japanese));
     dispatch(set.editReading(reading));
     dispatch(set.editTranslation(topMeanings(info)));
-    dispatch(set.focus(HTMLId.SaveCardEdit));
   },
 
   selectPreviousSuggestion: () => (dispatch: Dispatch, getState: GetState) => {

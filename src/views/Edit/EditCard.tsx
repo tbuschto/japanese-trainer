@@ -1,5 +1,5 @@
 import {actions} from './editActions';
-import {handleInputReading, handleInputTranslation, handleInputJapanese, handleKeyDown} from './eventHandler';
+import {handleInputReading, handleInputTranslation, handleInputJapanese, handleKeyDown, handleKeyUp} from './eventHandler';
 import {
   selectHasPrevCard, selectHasNextCard,
   selectJapaneseValidationError, selectReadingValidationError, selectTranslationValidationError
@@ -9,13 +9,13 @@ import {EditControls} from './EditControls';
 import {Action} from '../../elements/Action';
 import {Label} from '../../elements/Label';
 import {LabeledTextInput} from '../../elements/TextInput';
-import {$, _} from '../../app/hooks';
+import {$, useAppDispatch} from '../../app/hooks';
 import {select, selectCurrentLesson} from '../../app/selectors';
 import {CLASS_DICTIONARY, CLASS_DICT_BG, CLASS_EDIT_CARD, CLASS_FORM} from '../../app/cssClassNames';
 import {HTMLId} from '../../app/AppState';
 
 export const EditCard = () => {
-  const dispatch = _();
+  const dispatch = useAppDispatch();
   return (
     <div className={CLASS_EDIT_CARD}>
       <h1>
@@ -38,6 +38,7 @@ export const EditCard = () => {
             error={$(selectJapaneseValidationError)}
             value={$(select.editJapanese)!}
             onKeyDown={handleKeyDown(dispatch)}
+            onKeyUp={handleKeyUp(dispatch)}
             onChange={handleInputJapanese(dispatch)}/>
         <LabeledTextInput
             id={HTMLId.EditReading}
@@ -46,6 +47,7 @@ export const EditCard = () => {
             value={$(select.editReading)!}
             onFocus={() => dispatch(actions.autoFill())}
             onKeyDown={handleKeyDown(dispatch)}
+            onKeyUp={handleKeyUp(dispatch)}
             onChange={handleInputReading(dispatch)}/>
         <LabeledTextInput
             id={HTMLId.EditTranslation}
@@ -53,6 +55,7 @@ export const EditCard = () => {
             error={$(selectTranslationValidationError)}
             value={$(select.editTranslation)!}
             onKeyDown={handleKeyDown(dispatch)}
+            onKeyUp={handleKeyUp(dispatch)}
             onChange={handleInputTranslation(dispatch)}/>
         <EditControls/>
       </div>

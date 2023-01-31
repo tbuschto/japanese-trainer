@@ -12,6 +12,9 @@ export const handleInputTranslation = InputHandler(value => setProperty('editTra
 export const handleInputLessonName = InputHandler(value => setProperty('inputLessonName', value));
 
 export const handleKeyDown: (dispatch: Dispatch) => KeyboardEventHandler = dispatch => ev => {
+  if (ev.repeat) {
+    return;
+  }
   switch(ev.key) {
     case 'ArrowDown':
       dispatch(actions.selectNextSuggestion());
@@ -22,8 +25,17 @@ export const handleKeyDown: (dispatch: Dispatch) => KeyboardEventHandler = dispa
       ev.preventDefault();
       break;
     case 'Enter':
-      console.info('select');
       ev.preventDefault();
+      dispatch(actions.acceptSuggestion());
+      break;
+    default: break;
+  }
+};
+
+export const handleKeyUp: (dispatch: Dispatch) => KeyboardEventHandler = dispatch => ev => {
+  switch(ev.key) {
+    case 'Enter':
+      dispatch(actions.focusNextAction());
       break;
     default: break;
   }

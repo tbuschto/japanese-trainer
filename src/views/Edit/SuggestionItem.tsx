@@ -1,11 +1,11 @@
 import {useEffect, useRef} from 'react';
 import {actions, topMeanings} from './editActions';
-import {$, _} from '../../app/hooks';
+import {$, useAppDispatch} from '../../app/hooks';
 import {selectSelectedSuggestion} from '../../app/selectors';
 import {JTDictReadingInfo} from '../../app/AppState';
 
 export const SuggestionItem = ({info}: {info: JTDictReadingInfo}) => {
-  const dispatch = _();
+  const dispatch = useAppDispatch();
   const hasKanji = !!info.kanji?.length;
   const selected = $(selectSelectedSuggestion) === info ? 'selected' : '';
   const item = useRef<HTMLLIElement>(null);
