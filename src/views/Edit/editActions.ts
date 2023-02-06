@@ -4,6 +4,7 @@ import {actionCreators as actionCreators, Dispatch, GetState, set, setLessonProp
 import {Card, EditingTarget, HTMLId, JTDictReadingInfo} from '../../app/AppState';
 import {generateId, selectCards, selectCurrentLesson, selectSelectedSuggestion} from '../../app/selectors';
 import {worker} from '../../worker';
+import {toSemicolonList, fromSemicolonList} from '../../app/util';
 
 const {hasKanji} = KuroShiro.Util;
 
@@ -32,7 +33,7 @@ export const actions = actionCreators({
     dispatch(actions.setEditingTarget(index));
     const card = selectCurrentEditCard(getState());
     dispatch(set.editReading(card?.reading || ''));
-    dispatch(set.editTranslation(card?.translation || ''));
+    dispatch(set.editTranslation(toSemicolonList(card?.meaning || [])));
     dispatch(set.editJapanese(card?.japanese || ''));
     dispatch(set.focus(HTMLId.EditJapanese));
     dispatch(set.suggestions([]));
@@ -51,7 +52,7 @@ export const actions = actionCreators({
       id: oldCard?.id || generateId(cards.map(({id}) => id)),
       japanese: state.editJapanese,
       reading: state.editReading,
-      translation: state.editTranslation
+      meaning: fromSemicolonList(state.editTranslation)
     };
     cards[editingTarget] = card;
     dispatch(setLessonProperty({cards}));

@@ -103,9 +103,9 @@ export type JTDictReadingInfo = {
 
 export type Card = {
   id: string,
-  japanese?: string,
+  japanese: string,
   reading?: string,
-  translation?: string
+  meaning: string[]
 };
 export type LessonId = string;
 export type Kanji = string;

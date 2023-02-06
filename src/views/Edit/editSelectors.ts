@@ -1,6 +1,7 @@
 import Kuroshiro from 'kuroshiro';
 import {AppState} from '../../app/AppState';
 import {selectCurrentLesson} from '../../app/selectors';
+import {toSemicolonList} from '../../app/util';
 
 const {hasJapanese, isKana} = Kuroshiro.Util;
 const hasRomaji = (str: string) => /[a-zA-Z]/.test(str);
@@ -32,7 +33,7 @@ export const selectCardHasChanged = (state: AppState) => {
   return !card
     || state.editJapanese !== card.japanese
     || state.editReading !== (card.reading || '')
-    || state.editTranslation !== card.translation;
+    || state.editTranslation !== toSemicolonList(card.meaning);
 };
 
 export const selectJapaneseValidationError = ({editJapanese: text}: AppState): string => {
