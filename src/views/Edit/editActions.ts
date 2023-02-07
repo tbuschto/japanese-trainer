@@ -1,7 +1,7 @@
 import KuroShiro from 'kuroshiro';
 import {selectCardHasChanged, selectCardIsNew, selectCurrentEditCard, selectEditCardIsValid} from './editSelectors';
-import {actionCreators as actionCreators, Dispatch, GetState, set, setLessonProperty} from '../../app/Action';
-import {Card, EditingTarget, HTMLId, JTDictReadingInfo} from '../../app/AppState';
+import {actionCreators as actionCreators, Dispatch, GetState, setLessonProperty, setProperty} from '../../app/Action';
+import {Card, HTMLId, JTDictReadingInfo} from '../../app/AppState';
 import {generateId, selectCards, selectCurrentLesson, selectSelectedSuggestion} from '../../app/selectors';
 import {worker} from '../../worker';
 import {toSemicolonList, fromSemicolonList} from '../../app/util';
@@ -30,13 +30,13 @@ export const actions = actionCreators({
   },
 
   editCard: (index: number) => (dispatch: Dispatch, getState: GetState) => {
-    dispatch(actions.setEditingTarget(index));
+    dispatch(setProperty('editingTarget', index));
     const card = selectCurrentEditCard(getState());
-    dispatch(set.editReading(card?.reading || ''));
-    dispatch(set.editTranslation(toSemicolonList(card?.meaning || [])));
-    dispatch(set.editJapanese(card?.japanese || ''));
-    dispatch(set.focus(HTMLId.EditJapanese));
-    dispatch(set.suggestions([]));
+    dispatch(setProperty('editReading', card?.reading || ''));
+    dispatch(setProperty('editTranslation', toSemicolonList(card?.meaning || [])));
+    dispatch(setProperty('editJapanese', card?.japanese || ''));
+    dispatch(setProperty('focus', HTMLId.EditJapanese));
+    dispatch(setProperty('suggestions', []));
   },
 
   saveEdit: () => (dispatch: Dispatch, getState: GetState) => {
@@ -63,11 +63,11 @@ export const actions = actionCreators({
   },
 
   cancelEdit: () => (dispatch: Dispatch) => {
-    dispatch(set.editReading(''));
-    dispatch(set.editTranslation(''));
-    dispatch(set.editJapanese(''));
-    dispatch(actions.setEditingTarget('none'));
-    dispatch(set.focus(''));
+    dispatch(setProperty('editReading', ''));
+    dispatch(setProperty('editTranslation', ''));
+    dispatch(setProperty('editJapanese', ''));
+    dispatch(setProperty('editingTarget', 'none'));
+    dispatch(setProperty('focus', ''));
   },
 
   editName: () => (dispatch: Dispatch, getState: GetState) => {
@@ -75,11 +75,9 @@ export const actions = actionCreators({
     if (!lesson) {
       return;
     }
-    dispatch(actions.setEditingTarget('name'));
-    dispatch(set.inputLessonName(lesson.name));
+    dispatch(setProperty('editingTarget', 'name'));
+    dispatch(setProperty('inputLessonName', lesson.name));
   },
-
-  setEditingTarget: (value: EditingTarget) => set.editingTarget(value),
 
   acceptInputLessonName: () => (dispatch: Dispatch, getState: GetState) => {
     const value = getState().inputLessonName;
@@ -87,7 +85,7 @@ export const actions = actionCreators({
       return;
     }
     dispatch(setLessonProperty({name: value}));
-    dispatch(actions.setEditingTarget('none'));
+    dispatch(setProperty('editingTarget', 'none'));
   },
 
   autoFill: () => async (dispatch: Dispatch) => {
@@ -103,7 +101,7 @@ export const actions = actionCreators({
     const reading = await worker.toHiragana(editJapanese);
     const state = getState();
     if (editJapanese === state.editJapanese && !state.editReading) {
-      dispatch(set.editReading(reading));
+      dispatch(setProperty('editReading', reading));
     }
   },
 
@@ -125,10 +123,10 @@ export const actions = actionCreators({
       if (state.editReading && entries.length > 1) {
         const matches = entries.filter(entry => entry.reading === state.editReading);
         dispatch(
-          set.editTranslation(topReadings(matches.length > 0 ? matches : entries))
+          setProperty('editTranslation', topReadings(matches.length > 0 ? matches : entries))
         );
       } else {
-        dispatch(set.editTranslation(topReadings(entries)));
+        dispatch(setProperty('editTranslation', topReadings(entries)));
       }
     }
   },
@@ -139,8 +137,8 @@ export const actions = actionCreators({
       ? await worker.startsWithKanji(editJapanese)
       : await worker.startsWithReading(editJapanese);
     if (getState().editJapanese === editJapanese) {
-      dispatch(set.suggestions(results));
-      dispatch(set.suggestionsSelection(0));
+      dispatch(setProperty('suggestions', results));
+      dispatch(setProperty('suggestionsSelection', 0));
     }
   },
 
@@ -156,9 +154,9 @@ export const actions = actionCreators({
     const cardHasChanged = selectCardHasChanged(state);
     const cardIsValid = selectEditCardIsValid(state);
     if (cardHasChanged && cardIsValid) {
-      dispatch(set.focus(HTMLId.SaveCardEdit));
+      dispatch(setProperty('focus', HTMLId.SaveCardEdit));
     } else if (!cardHasChanged) {
-      dispatch(set.focus(HTMLId.CancelCardEdit));
+      dispatch(setProperty('focus', HTMLId.CancelCardEdit));
     }
   },
 
@@ -166,20 +164,20 @@ export const actions = actionCreators({
     const kanji = info.kanji?.join(', ');
     const japanese = kanji || info.reading;
     const reading = kanji ? info.reading : '';
-    dispatch(set.editJapanese(japanese));
-    dispatch(set.editReading(reading));
-    dispatch(set.editTranslation(topMeanings(info)));
+    dispatch(setProperty('editJapanese',japanese));
+    dispatch(setProperty('editReading', reading));
+    dispatch(setProperty('editTranslation', topMeanings(info)));
   },
 
   selectPreviousSuggestion: () => (dispatch: Dispatch, getState: GetState) => {
     const newSelection = Math.max(0, getState().suggestionsSelection - 1);
-    dispatch(set.suggestionsSelection(newSelection));
+    dispatch(setProperty('suggestionsSelection', newSelection));
   },
 
   selectNextSuggestion: () => (dispatch: Dispatch, getState: GetState) => {
     const {suggestions, suggestionsSelection} = getState();
     const newSelection = Math.max(0, Math.min(suggestions.length - 1, suggestionsSelection + 1));
-    dispatch(set.suggestionsSelection(newSelection));
+    dispatch(setProperty('suggestionsSelection', newSelection));
   }
 });
 

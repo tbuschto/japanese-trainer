@@ -1,6 +1,6 @@
 import {push} from 'connected-react-router';
-import {ActionType, CAction, CThunk, setProperty} from '../../app/Action';
-import {Lesson, LessonId, RootPath} from '../../app/AppState';
+import {CThunk, setProperty} from '../../app/Action';
+import {Lesson, RootPath} from '../../app/AppState';
 import {generateId, selectCurrentLesson} from '../../app/selectors';
 import {actions} from '../Edit/editActions';
 
@@ -19,14 +19,14 @@ export const createNewLesson: CThunk = () => (dispatch, getState) => {
 };
 
 export const newQuiz: CThunk<string> = (lessonId: string) => dispatch => {
-  dispatch(setCurrentLesson(lessonId));
+  dispatch(setProperty('currentLesson', lessonId));
   dispatch(setProperty('quiz', {correct: []}));
   dispatch(push(RootPath.Quiz));
 };
 
 export const editLesson: CThunk<string> = (lessonId: string) => dispatch => {
-  dispatch(actions.setEditingTarget('none'));
-  dispatch(setCurrentLesson(lessonId));
+  dispatch(setProperty('editingTarget', 'none'));
+  dispatch(setProperty('currentLesson', lessonId));
   dispatch(push(RootPath.Edit));
 };
 
@@ -35,9 +35,6 @@ export const deleteLesson: CThunk<string> = (lessonId: string) => (dispatch, get
   delete lessons[lessonId];
   dispatch(setProperty('lessons', lessons));
 };
-
-export const setCurrentLesson: CAction<LessonId> = value =>
-  ({type: ActionType.SetProperty, property: 'currentLesson', value});
 
 export const setupQuiz: CThunk<string> = () => (dispatch, getState) => {
   dispatch(setProperty('quiz', {

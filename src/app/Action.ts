@@ -4,7 +4,7 @@
 import {ThunkAction, ThunkDispatch} from '@reduxjs/toolkit';
 import _ from 'underscore';
 import {CallHistoryMethodAction} from 'connected-react-router';
-import {AppState, defaults, Lesson} from './AppState';
+import {AppState, Lesson} from './AppState';
 import {selectCurrentLesson} from './selectors';
 import {groupLog} from './groupLog';
 
@@ -45,10 +45,6 @@ export function setProperty<
   return {type: ActionType.SetProperty, property, value};
 }
 
-export const set = _(defaults).mapObject(
-  (_value, key) => makeSetter(key as keyof AppState)
-) as SetterDict;
-
 export const thunks = <T extends Record<string, Function>>(all: T) => all;
 
 export function actionCreators<T>(obj: T): T {
@@ -75,8 +71,4 @@ export function actionCreators<T>(obj: T): T {
     }).bind(obj) as any;
   }
   return obj;
-}
-
-function makeSetter<T extends keyof AppState>(prop: T): Setter<T> {
-  return (value: AppState[T]) => setProperty(prop, value);
 }
