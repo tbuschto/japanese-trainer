@@ -3,7 +3,8 @@ import {AppState, defaults, JTDictReadingInfo, Lesson} from './AppState';
 
 export const selectLesson = (id: string) => ({lessons}: AppState) => lessons[id];
 
-export const selectCards = (state: AppState) => selectCurrentLesson(state)?.cards || [];
+export const selectCards = (state: AppState) =>
+  selectCurrentLesson(state)?.cards.map(id => state.cards[id]) || [];
 
 export const selectLessonNames = ({lessons}: AppState) =>
   Object.keys(lessons).sort();

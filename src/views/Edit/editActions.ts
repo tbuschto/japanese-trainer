@@ -24,9 +24,13 @@ export const actions = actionCreators({
   },
 
   deleteCard: (index: number) => (dispatch: Dispatch, getState: GetState) => {
-    const cards = selectCards(getState()).concat();
-    cards.splice(index, 1);
-    dispatch(setLessonProperty({cards}));
+    const lesson = selectCurrentLesson(getState());
+    if (!lesson) {
+      return;
+    }
+    const lessonCards = lesson.cards.concat();
+    lessonCards.splice(index, 1);
+    dispatch(setLessonProperty({cards: lessonCards}));
   },
 
   editCard: (index: number) => (dispatch: Dispatch, getState: GetState) => {
@@ -41,21 +45,22 @@ export const actions = actionCreators({
 
   saveEdit: () => (dispatch: Dispatch, getState: GetState) => {
     const state = getState();
-    const {editingTarget} = state;
+    const {editingTarget, cards} = state;
     if (typeof editingTarget !== 'number') throw new Error('Editing target is not a card');
     const lesson = selectCurrentLesson(state);
     const cardIsNew = selectCardIsNew(state);
     if (!lesson) throw new Error('No lesson selected');
-    const cards = lesson.cards.concat();
-    const oldCard = cards[editingTarget] as Card | undefined;
+    const lessonCards = lesson.cards.concat();
+    const oldCard = selectCards(state)[editingTarget] as Card | undefined;
     const card: Card = {
-      id: oldCard?.id || generateId(cards.map(({id}) => id)),
+      id: oldCard?.id || generateId(lessonCards),
       japanese: state.editJapanese,
       reading: state.editReading,
       meaning: fromSemicolonList(state.editTranslation)
     };
-    cards[editingTarget] = card;
-    dispatch(setLessonProperty({cards}));
+    lessonCards[editingTarget] = card.id;
+    cards[card.id] = card;
+    dispatch(setLessonProperty({cards: lessonCards}));
     dispatch(actions.cancelEdit());
     if (cardIsNew) {
       dispatch(actions.newCard());

@@ -1,6 +1,6 @@
 import Kuroshiro from 'kuroshiro';
 import {AppState} from '../../app/AppState';
-import {selectCurrentLesson} from '../../app/selectors';
+import {selectCards, selectCurrentLesson} from '../../app/selectors';
 import {toSemicolonList} from '../../app/util';
 
 const {hasJapanese, isKana} = Kuroshiro.Util;
@@ -8,12 +8,11 @@ const hasRomaji = (str: string) => /[a-zA-Z]/.test(str);
 const jMisc = '、,。ー！？・　 '.split('');
 
 export const selectCurrentEditCard = (state: AppState) => {
-  const {currentLesson, lessons, editingTarget} = state;
+  const {currentLesson, editingTarget} = state;
   if (!currentLesson || typeof editingTarget !== 'number') {
     return null;
   }
-  const lesson = lessons[currentLesson];
-  return lesson.cards[editingTarget];
+  return selectCards(state)[editingTarget] || null;
 };
 
 export const selectHasNextCard = (state: AppState) => {

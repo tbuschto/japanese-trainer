@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {ThunkAction, ThunkDispatch} from '@reduxjs/toolkit';
-import _ from 'underscore';
 import {CallHistoryMethodAction} from 'connected-react-router';
 import {AppState, Lesson} from './AppState';
 import {selectCurrentLesson} from './selectors';

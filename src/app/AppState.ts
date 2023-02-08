@@ -6,6 +6,7 @@ export interface AppState {
   router: RouterState<unknown>;
   screen: RootPath;
   lessons: Lessons;
+  cards: Cards;
   currentLesson: LessonId | null;
   currentQuizCard: number;
   kanjiMode: WordElementMode;
@@ -54,6 +55,7 @@ export const defaults: Readonly<AppState> = Object.freeze({
   router: null as any,
   screen: RootPath.Home,
   lessons: {},
+  cards: {},
   currentLesson: null,
   currentQuizCard: 0,
   kanjiMode: WordElementMode.Show,
@@ -107,15 +109,18 @@ export type Card = {
   reading?: string,
   meaning: string[]
 };
+
 export type LessonId = string;
+export type CardId = string;
 export type Kanji = string;
 export type Reading = string;
 export type Meaning = Readonly<string[]>;
 export type Lessons = {[id: string]: Lesson};
+export type Cards = {[id: string]: Card};
 export type Quiz = {correct: boolean[]};
 export type EditingTarget = number | 'name' | 'none';
 
 export interface Lesson {
   name: string;
-  cards: Card[];
+  cards: CardId[];
 }
