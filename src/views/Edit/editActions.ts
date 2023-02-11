@@ -1,7 +1,7 @@
 import KuroShiro from 'kuroshiro';
 import {selectCardHasChanged, selectCardIsNew, selectCurrentEditCard, selectEditCardIsValid} from './editSelectors';
 import {actionCreators as actionCreators, Dispatch, GetState, setLessonProperty, setProperty} from '../../app/Action';
-import {Card, HTMLId, JTDictReadingInfo} from '../../app/AppState';
+import {Candidate, Card, HTMLId, JTDictReadingInfo} from '../../app/AppState';
 import {generateId, selectCards, selectCurrentLesson, selectSelectedSuggestion} from '../../app/selectors';
 import {worker} from '../../worker';
 import {toSemicolonList, fromSemicolonList} from '../../app/util';
@@ -141,16 +141,21 @@ export const actions = actionCreators({
     const results = hasKanji(editJapanese)
       ? await worker.startsWithKanji(editJapanese)
       : await worker.startsWithReading(editJapanese);
+    const cards = results.flatMap(
+      ({kanji, reading, meaning}): Candidate | Candidate[] => kanji?.length
+        ? kanji.map(japanese => ({japanese, reading, meaning}))
+        : {japanese: reading, meaning}
+    );
     if (getState().editJapanese === editJapanese) {
-      dispatch(setProperty('suggestions', results));
+      dispatch(setProperty('suggestions', cards));
       dispatch(setProperty('suggestionsSelection', 0));
     }
   },
 
   acceptSuggestion: () => (dispatch: Dispatch, getState: GetState) => {
-    const info = selectSelectedSuggestion(getState());
-    if (info) {
-      dispatch(actions.fillDictEntry(info));
+    const card = selectSelectedSuggestion(getState());
+    if (card) {
+      dispatch(actions.fillDictEntry(card));
     }
   },
 
@@ -165,13 +170,10 @@ export const actions = actionCreators({
     }
   },
 
-  fillDictEntry: (info: JTDictReadingInfo) => (dispatch: Dispatch) => {
-    const kanji = info.kanji?.join(', ');
-    const japanese = kanji || info.reading;
-    const reading = kanji ? info.reading : '';
-    dispatch(setProperty('editJapanese',japanese));
-    dispatch(setProperty('editReading', reading));
-    dispatch(setProperty('editTranslation', topMeanings(info)));
+  fillDictEntry: (candidate: Candidate) => (dispatch: Dispatch) => {
+    dispatch(setProperty('editJapanese', candidate.japanese));
+    dispatch(setProperty('editReading', candidate.reading || ''));
+    dispatch(setProperty('editTranslation', candidate.meaning.join('; ')));
   },
 
   selectPreviousSuggestion: () => (dispatch: Dispatch, getState: GetState) => {
@@ -190,6 +192,6 @@ function topReadings(readings: JTDictReadingInfo[]) {
   return readings.slice(0, 3).map(info => info.meaning).join(', ');
 }
 
-export function topMeanings(info: JTDictReadingInfo) {
-  return info.meaning.slice(0, 3).join(', ');
+export function topMeanings(candidate: Candidate) {
+  return candidate.meaning.slice(0, 3).join(', ');
 }

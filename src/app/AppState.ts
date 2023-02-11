@@ -23,7 +23,7 @@ export interface AppState {
   quizJapanese: string;
   quizReading: string;
   quizTranslation: string;
-  suggestions: JTDictReadingInfo[];
+  suggestions: Candidate[];
   suggestionsSelection: number;
 }
 
@@ -103,11 +103,14 @@ export type JTDictReadingInfo = {
   weight?: number
 };
 
-export type Card = {
-  id: string,
+export type Candidate = {
   japanese: string,
   reading?: string,
   meaning: string[]
+};
+
+export type Card = Candidate & {
+  id: string
 };
 
 export type LessonId = string;

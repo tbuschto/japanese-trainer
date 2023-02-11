@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import {AppState, defaults, JTDictReadingInfo, Lesson} from './AppState';
+import {AppState, Candidate, defaults, Lesson} from './AppState';
 
 export const selectLesson = (id: string) => ({lessons}: AppState) => lessons[id];
 
@@ -25,7 +25,7 @@ export const selectCurrentQuizCard = (state: AppState) => {
   return lesson.cards[qIndex];
 };
 
-export const selectSelectedSuggestion = (state: AppState): JTDictReadingInfo | null => {
+export const selectSelectedSuggestion = (state: AppState): Candidate | null => {
   if (state.suggestionsSelection < 0) {
     return null;
   }
@@ -43,6 +43,7 @@ export function generateId(ids: string[]) {
 }
 
 export type Selector<T extends keyof AppState> = (state: AppState) => AppState[T];
+
 type SelectorDict = Readonly<{[T in keyof AppState]: Selector<T>}>;
 
 export const select = _(defaults).mapObject(

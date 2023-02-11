@@ -64,7 +64,7 @@ export const EditCard = () => {
         <div className={CLASS_DICT_BG}>
           <ul>
             {$(select.suggestions).map(
-              info => <SuggestionItem info={info}/>
+              candidate => <SuggestionItem candidate={candidate}/>
             )}
           </ul>
         </div>

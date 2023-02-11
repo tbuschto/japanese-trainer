@@ -2,12 +2,11 @@ import {useEffect, useRef} from 'react';
 import {actions, topMeanings} from './editActions';
 import {$, useAppDispatch} from '../../app/hooks';
 import {selectSelectedSuggestion} from '../../app/selectors';
-import {JTDictReadingInfo} from '../../app/AppState';
+import {Candidate} from '../../app/AppState';
 
-export const SuggestionItem = ({info}: {info: JTDictReadingInfo}) => {
+export const SuggestionItem = ({candidate}: {candidate: Candidate}) => {
   const dispatch = useAppDispatch();
-  const hasKanji = !!info.kanji?.length;
-  const selected = $(selectSelectedSuggestion) === info ? 'selected' : '';
+  const selected = $(selectSelectedSuggestion) === candidate ? 'selected' : '';
   const item = useRef<HTMLLIElement>(null);
   useEffect(() => {
     if (selected && item.current) {
@@ -25,20 +24,21 @@ export const SuggestionItem = ({info}: {info: JTDictReadingInfo}) => {
     }
   }, [selected]);
   return (
-    <li ref={item} className={selected} onClick={() => dispatch(actions.fillDictEntry(info))}>
+    <li ref={item} className={selected}
+        onClick={() => dispatch(actions.fillDictEntry(candidate))}>
       <div className='info'>
-        {hasKanji ? <KanjiInfo info={info}/> : <ReadingInfo info={info}/>}
+        {candidate.reading ? <KanjiWord candidate={candidate}/> : <KanaWord candidate={candidate}/>}
         <br/>
-        {topMeanings(info)}
+        {topMeanings(candidate)}
       </div>
       <div className='enter'>↲</div>
     </li>
   );
 };
 
-const KanjiInfo = ({info}: {info: JTDictReadingInfo}) => <>
-  <b>{info.kanji?.join(', ') || info.reading}</b><br/>
-  <i>{info.reading}</i>
+const KanjiWord = ({candidate}: {candidate: Candidate}) => <>
+  <b>{candidate.japanese}</b><br/>
+  <i>{candidate.reading}</i>
 </>;
 
-const ReadingInfo = ({info}: {info: JTDictReadingInfo}) => <b>{info.reading}</b>;
+const KanaWord = ({candidate}: {candidate: Candidate}) => <b>{candidate.japanese}</b>;
