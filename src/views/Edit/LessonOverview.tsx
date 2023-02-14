@@ -52,7 +52,7 @@ const NewCardRow = () => <tr>
   <td></td>
   <td></td>
   <td colSpan={2}>
-    <Action action={() => actions.newCard()}>New Card</Action>
+    <Action action={() => actions.editNewCard()}>New Card</Action>
   </td>
 </tr>;
 

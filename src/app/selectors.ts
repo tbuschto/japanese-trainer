@@ -3,6 +3,16 @@ import {AppState, Candidate, defaults, Lesson} from './AppState';
 
 export const selectLesson = (id: string) => ({lessons}: AppState) => lessons[id];
 
+export const selectMatchingCard = (candidate: Candidate) => ({cards}: AppState) => {
+  const matches = _.values(cards).filter(
+    card => card.japanese === candidate.japanese && card.reading === card.reading
+  );
+  if (matches.length > 1) {
+    console.error(`Multiple matches for ${candidate.japanese} indicates inconsistent state`);
+  }
+  return matches[0] || null;
+};
+
 export const selectCards = (state: AppState) =>
   selectCurrentLesson(state)?.cards.map(id => state.cards[id]) || [];
 
@@ -32,7 +42,8 @@ export const selectSelectedSuggestion = (state: AppState): Candidate | null => {
   return state.suggestions[state.suggestionsSelection] || null;
 };
 
-export function generateId(ids: string[]) {
+export function generateId(db: Record<string, unknown>) {
+  const ids = Object.keys(db);
   const lastId = ids.map(id => parseInt(id, 10))
     .map(index => isNaN(index) ? 0 : index)
     .reduce((a, b) => Math.max(a, b), 0);

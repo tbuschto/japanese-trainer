@@ -176,6 +176,8 @@ const ALIKE = Object.freeze({
   お: ['を'],
   え: ['へ'],
   ち: ['じ'],
+  じ: ['ち'],
+  し: ['じ'],
   は: ['わ', 'あ'],
   せ: ['ぜ']
 }) as Record<string, string[]>;

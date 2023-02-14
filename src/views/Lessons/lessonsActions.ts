@@ -6,7 +6,7 @@ import {actions} from '../Edit/editActions';
 
 export const createNewLesson: CThunk = () => (dispatch, getState) => {
   const {lessons} = getState();
-  const newId = generateId(Object.keys(lessons));
+  const newId = generateId(lessons);
   const newLesson: Lesson = {
     name: 'Lesson ' + newId,
     cards: []

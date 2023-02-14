@@ -1,8 +1,8 @@
 import KuroShiro from 'kuroshiro';
-import {selectCardHasChanged, selectCardIsNew, selectCurrentEditCard, selectEditCardIsValid} from './editSelectors';
+import {selectCardHasChanged, selectCardIsNew as selectIsNewLessonCard, selectCurrentEditCard, selectEditCardIsValid} from './editSelectors';
 import {actionCreators as actionCreators, Dispatch, GetState, setLessonProperty, setProperty} from '../../app/Action';
 import {Candidate, Card, HTMLId, JTDictReadingInfo} from '../../app/AppState';
-import {generateId, selectCards, selectCurrentLesson, selectSelectedSuggestion} from '../../app/selectors';
+import {generateId, selectCards, selectCurrentLesson, selectMatchingCard, selectSelectedSuggestion} from '../../app/selectors';
 import {worker} from '../../worker';
 import {toSemicolonList, fromSemicolonList} from '../../app/util';
 
@@ -10,7 +10,7 @@ const {hasKanji} = KuroShiro.Util;
 
 export const actions = actionCreators({
 
-  newCard: () => (dispatch: Dispatch, getState: GetState) => {
+  editNewCard: () => (dispatch: Dispatch, getState: GetState) => {
     const cards = selectCurrentLesson(getState())!.cards!;
     dispatch(actions.editCard(cards.length));
   },
@@ -45,25 +45,35 @@ export const actions = actionCreators({
 
   saveEdit: () => (dispatch: Dispatch, getState: GetState) => {
     const state = getState();
-    const {editingTarget, cards} = state;
+    const {editingTarget} = state;
+    const cards = {...state.cards};
     if (typeof editingTarget !== 'number') throw new Error('Editing target is not a card');
     const lesson = selectCurrentLesson(state);
-    const cardIsNew = selectCardIsNew(state);
+    const isNewLessonCard = selectIsNewLessonCard(state);
     if (!lesson) throw new Error('No lesson selected');
     const lessonCards = lesson.cards.concat();
-    const oldCard = selectCards(state)[editingTarget] as Card | undefined;
-    const card: Card = {
-      id: oldCard?.id || generateId(lessonCards),
+    const candidate: Candidate = {
       japanese: state.editJapanese,
       reading: state.editReading,
       meaning: fromSemicolonList(state.editTranslation)
     };
+    const oldCard = selectCards(state)[editingTarget];
+    const matchingCard = selectMatchingCard(candidate)(state);
+    if (oldCard && matchingCard) {
+      console.error('TODO: Inform user card already exists');
+      return;
+    }
+    const card: Card = {
+      id: oldCard?.id || matchingCard.id || generateId(cards),
+      ...candidate
+    };
     lessonCards[editingTarget] = card.id;
     cards[card.id] = card;
+    dispatch(setProperty('cards', cards));
     dispatch(setLessonProperty({cards: lessonCards}));
     dispatch(actions.cancelEdit());
-    if (cardIsNew) {
-      dispatch(actions.newCard());
+    if (isNewLessonCard) {
+      dispatch(actions.editNewCard());
     }
   },
 
@@ -137,17 +147,17 @@ export const actions = actionCreators({
   },
 
   updateSuggestions: () => async (dispatch: Dispatch, getState: GetState) => {
-    const {editJapanese} = getState();
-    const results = hasKanji(editJapanese)
-      ? await worker.startsWithKanji(editJapanese)
-      : await worker.startsWithReading(editJapanese);
-    const cards = results.flatMap(
+    const state = getState();
+    const results = hasKanji(state.editJapanese)
+      ? await worker.startsWithKanji(state.editJapanese)
+      : await worker.startsWithReading(state.editJapanese);
+    const candidates = results.flatMap(
       ({kanji, reading, meaning}): Candidate | Candidate[] => kanji?.length
         ? kanji.map(japanese => ({japanese, reading, meaning}))
         : {japanese: reading, meaning}
-    );
-    if (getState().editJapanese === editJapanese) {
-      dispatch(setProperty('suggestions', cards));
+    ).map(candidate => selectMatchingCard(candidate)(state) || candidate);
+    if (getState().editJapanese === state.editJapanese) {
+      dispatch(setProperty('suggestions', candidates));
       dispatch(setProperty('suggestionsSelection', 0));
     }
   },
