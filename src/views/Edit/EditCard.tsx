@@ -1,8 +1,10 @@
 import {actions} from './editActions';
-import {handleInputReading, handleInputTranslation, handleInputJapanese, handleKeyDown, handleKeyUp} from './eventHandler';
 import {
-  selectHasPrevCard, selectHasNextCard,
-  selectJapaneseValidationError, selectReadingValidationError, selectTranslationValidationError
+  handleInputReading, handleInputTranslation, handleInputJapanese, handleKeyDown, handleKeyUp
+} from './eventHandler';
+import {
+  selectHasPrevCard, selectHasNextCard, selectJapaneseValidationError,
+  selectReadingValidationError, selectTranslationValidationError, selectCurrentCardLessonIndex
 } from './editSelectors';
 import {SuggestionItem} from './SuggestionItem';
 import {EditControls} from './EditControls';
@@ -25,7 +27,7 @@ export const EditCard = () => {
           &#129128;
         </Action>
         <span className='cardIndex'>
-          &nbsp;Card {$(select.editingTarget) as number + 1}&nbsp;
+          &nbsp;Card {$(selectCurrentCardLessonIndex) + 1}&nbsp;
         </span>
         <Action action={actions.nextCard} enabled={$(selectHasNextCard)}>
           &#129130;

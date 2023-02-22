@@ -1,6 +1,6 @@
 import Kuroshiro from 'kuroshiro';
-import {AppState} from '../../app/AppState';
-import {selectCards, selectCurrentLesson} from '../../app/selectors';
+import {AppState, Card} from '../../app/AppState';
+import {selectCurrentLessonCards, selectCard} from '../../app/selectors';
 import {toSemicolonList} from '../../app/util';
 
 const {hasJapanese, isKana} = Kuroshiro.Util;
@@ -8,23 +8,22 @@ const hasRomaji = (str: string) => /[a-zA-Z]/.test(str);
 const jMisc = '、,。ー！？・　 '.split('');
 
 export const selectCurrentEditCard = (state: AppState) => {
-  const {currentLesson, editingTarget} = state;
-  if (!currentLesson || typeof editingTarget !== 'number') {
+  const {editingTarget} = state;
+  if (typeof editingTarget === 'string') {
     return null;
   }
-  return selectCards(state)[editingTarget] || null;
+  return selectCard(editingTarget)(state);
 };
 
 export const selectHasNextCard = (state: AppState) => {
-  const lesson = selectCurrentLesson(state);
-  const index = state.editingTarget;
-  return (!!lesson) && (typeof index === 'number') && (index < lesson.cards.length - 1);
+  const cards = selectCurrentLessonCards(state);
+  const index = selectCurrentCardLessonIndex(state);
+  return index < cards.length - 1;
 };
 
 export const selectHasPrevCard = (state: AppState) => {
-  const lesson = selectCurrentLesson(state);
-  const index = state.editingTarget;
-  return (!!lesson) && (typeof index === 'number') && (index > 0);
+  const index = selectCurrentCardLessonIndex(state);
+  return index > 0;
 };
 
 export const selectCardHasChanged = (state: AppState) => {
@@ -73,4 +72,16 @@ export const selectEditCardIsValid = (state: AppState): boolean =>
 export const selectEditCardIsEmpty = (state: AppState) =>
   !(state.editTranslation || state.editJapanese || state.editReading);
 
-export const selectCardIsNew = (state: AppState) => selectCurrentLesson(state)?.cards.length === state.editingTarget;
+export const selectCurrentCardLessonIndex = (state: AppState) => {
+  const index = selectCardLessonIndex(selectCurrentEditCard(state))(state);
+  if (index < 0) {
+    return selectCurrentLessonCards(state).length;
+  }
+  return index;
+};
+
+export const selectCardIsNew = ({editingTarget}: AppState) =>
+  (typeof editingTarget === 'object') && !editingTarget.cardId;
+
+const selectCardLessonIndex = (card: Card | null) => (state: AppState) =>
+  selectCurrentLessonCards(state).findIndex(({id}) => id === card?.id);

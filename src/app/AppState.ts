@@ -64,7 +64,7 @@ export const defaults: Readonly<AppState> = Object.freeze({
   quiz: null,
   hint: '',
   focus: '',
-  editingTarget: 0,
+  editingTarget: 'none',
   inputLessonName: 'none',
   editJapanese: '',
   editReading: '',
@@ -121,9 +121,17 @@ export type Meaning = Readonly<string[]>;
 export type Lessons = {[id: string]: Lesson};
 export type Cards = {[id: string]: Card};
 export type Quiz = {correct: boolean[]};
-export type EditingTarget = number | 'name' | 'none';
+export type EditingTarget = {cardId: string | null} | 'name' | 'none';
 
-export interface Lesson {
+export interface CardDeck {
   name: string;
   cards: CardId[];
 }
+
+export interface CardCollection {
+  name: string;
+  filter: 'none';
+}
+
+export type Lesson = CardDeck | CardCollection;
+

@@ -15,7 +15,15 @@ export function Lessons() {
           )}
           <tr>
             <td>
-              <Action action={() => createNewLesson()}>New</Action>
+              <Action action={() => createNewLesson('cardDeck')}>New Card Deck</Action>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>
+              <Action action={() => createNewLesson('cardCollection')}>New Card Collection</Action>
             </td>
             <td></td>
             <td></td>

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 export function groupLog<T>(message: string | string[], wrapped: () => T): T {
-  console.groupCollapsed(message instanceof Array ? message.join(' ') :  message);
+  console.group(message instanceof Array ? message.join(' ') :  message);
   try {
     const result = wrapped();
     if (result instanceof Promise) {

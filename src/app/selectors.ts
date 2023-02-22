@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import {AppState, Candidate, defaults, Lesson} from './AppState';
+import {isCardDeck, isCardCollection} from './guards';
 
 export const selectLesson = (id: string) => ({lessons}: AppState) => lessons[id];
 
@@ -13,8 +14,21 @@ export const selectMatchingCard = (candidate: Candidate) => ({cards}: AppState) 
   return matches[0] || null;
 };
 
-export const selectCards = (state: AppState) =>
-  selectCurrentLesson(state)?.cards.map(id => state.cards[id]) || [];
+export const selectCurrentLessonCards = (state: AppState) => {
+  const lesson = selectCurrentLesson(state);
+  if (isCardDeck(lesson)) {
+    return lesson.cards.map(id => state.cards[id]) || [];
+  } else if (isCardCollection(lesson)) {
+    return selectAllCardsOrderedById(state);
+  }
+  return [];
+};
+
+export const selectAllCardsOrderedById = ({cards}: AppState) =>
+  Object.keys(cards).sort().map(id => cards[id]);
+
+export const selectCard = ({cardId}: {cardId: string | null}) =>
+  (state: AppState) => cardId ? state.cards[cardId] : null;
 
 export const selectLessonNames = ({lessons}: AppState) =>
   Object.keys(lessons).sort();
@@ -24,15 +38,6 @@ export const selectCurrentLesson = ({currentLesson: currentLesson, lessons}: App
     return null;
   }
   return lessons[currentLesson];
-};
-
-export const selectCurrentQuizCard = (state: AppState) => {
-  if (!state.currentLesson) {
-    return null;
-  }
-  const lesson = state.lessons[state.currentLesson];
-  const qIndex = state.currentQuizCard || 0;
-  return lesson.cards[qIndex];
 };
 
 export const selectSelectedSuggestion = (state: AppState): Candidate | null => {

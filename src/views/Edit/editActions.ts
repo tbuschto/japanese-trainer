@@ -1,31 +1,38 @@
 import KuroShiro from 'kuroshiro';
-import {selectCardHasChanged, selectCardIsNew as selectIsNewLessonCard, selectCurrentEditCard, selectEditCardIsValid} from './editSelectors';
+import {selectCardHasChanged, selectCurrentCardLessonIndex, selectCurrentEditCard, selectEditCardIsValid} from './editSelectors';
 import {actionCreators as actionCreators, Dispatch, GetState, setLessonProperty, setProperty} from '../../app/Action';
 import {Candidate, Card, HTMLId, JTDictReadingInfo} from '../../app/AppState';
-import {generateId, selectCards, selectCurrentLesson, selectMatchingCard, selectSelectedSuggestion} from '../../app/selectors';
+import {generateId, selectCurrentLesson, selectCurrentLessonCards, selectMatchingCard, selectSelectedSuggestion} from '../../app/selectors';
 import {worker} from '../../worker';
 import {toSemicolonList, fromSemicolonList} from '../../app/util';
+import {isCardDeck} from '../../app/guards';
 
 const {hasKanji} = KuroShiro.Util;
 
 export const actions = actionCreators({
 
-  editNewCard: () => (dispatch: Dispatch, getState: GetState) => {
-    const cards = selectCurrentLesson(getState())!.cards!;
-    dispatch(actions.editCard(cards.length));
+  editNewCard: () => (dispatch: Dispatch, _getState: GetState) => {
+    dispatch(actions.editCard({}));
   },
 
   nextCard: () => (dispatch: Dispatch, getState: GetState) => {
-    dispatch(actions.editCard(getState().editingTarget as number + 1));
+    const state = getState();
+    const index = selectCurrentCardLessonIndex(state);
+    const cards = selectCurrentLessonCards(state);
+    const newIndex = Math.min(cards.length - 1, index + 1);
+    dispatch(actions.editCard(selectCurrentLessonCards(state)[newIndex]));
   },
 
   prevCard: () => (dispatch: Dispatch, getState: GetState) => {
-    dispatch(actions.editCard(getState().editingTarget as number - 1));
+    const state = getState();
+    const index = selectCurrentCardLessonIndex(state);
+    const newIndex = Math.max(0, index - 1);
+    dispatch(actions.editCard(selectCurrentLessonCards(state)[newIndex]));
   },
 
   deleteCard: (index: number) => (dispatch: Dispatch, getState: GetState) => {
     const lesson = selectCurrentLesson(getState());
-    if (!lesson) {
+    if (!isCardDeck(lesson)) {
       return;
     }
     const lessonCards = lesson.cards.concat();
@@ -33,8 +40,8 @@ export const actions = actionCreators({
     dispatch(setLessonProperty({cards: lessonCards}));
   },
 
-  editCard: (index: number) => (dispatch: Dispatch, getState: GetState) => {
-    dispatch(setProperty('editingTarget', index));
+  editCard: ({id}: Partial<Card>) => (dispatch: Dispatch, getState: GetState) => {
+    dispatch(setProperty('editingTarget', {cardId: id || null}));
     const card = selectCurrentEditCard(getState());
     dispatch(setProperty('editReading', card?.reading || ''));
     dispatch(setProperty('editTranslation', toSemicolonList(card?.meaning || [])));
@@ -47,32 +54,28 @@ export const actions = actionCreators({
     const state = getState();
     const {editingTarget} = state;
     const cards = {...state.cards};
-    if (typeof editingTarget !== 'number') throw new Error('Editing target is not a card');
-    const lesson = selectCurrentLesson(state);
-    const isNewLessonCard = selectIsNewLessonCard(state);
-    if (!lesson) throw new Error('No lesson selected');
-    const lessonCards = lesson.cards.concat();
+    if (typeof editingTarget === 'string') throw new Error('Editing target is not a card');
     const candidate: Candidate = {
       japanese: state.editJapanese,
       reading: state.editReading,
       meaning: fromSemicolonList(state.editTranslation)
     };
-    const oldCard = selectCards(state)[editingTarget];
+    const oldCard = selectCurrentEditCard(state);
     const matchingCard = selectMatchingCard(candidate)(state);
-    if (oldCard && matchingCard) {
+    if (oldCard && matchingCard && (oldCard !== matchingCard)) {
       console.error('TODO: Inform user card already exists');
       return;
     }
     const card: Card = {
-      id: oldCard?.id || matchingCard.id || generateId(cards),
+      id: oldCard?.id || matchingCard?.id || generateId(cards),
       ...candidate
     };
-    lessonCards[editingTarget] = card.id;
     cards[card.id] = card;
     dispatch(setProperty('cards', cards));
-    dispatch(setLessonProperty({cards: lessonCards}));
     dispatch(actions.cancelEdit());
-    if (isNewLessonCard) {
+    const lesson = selectCurrentLesson(state);
+    if (isCardDeck(lesson) && lesson.cards.indexOf(card.id) === -1) {
+      dispatch(setLessonProperty({cards: lesson.cards.concat(card.id)}));
       dispatch(actions.editNewCard());
     }
   },

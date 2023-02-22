@@ -15,7 +15,7 @@ export function App() {
       <ConnectedRouter history={trainer.history}>
         <>
           <nav>
-            <span className={CLASS_LOGO}>くそ日本語</span>
+            <span className={CLASS_LOGO}>ばか日本語</span>
             <NavPoint to={RootPath.Lessons}>Lessons</NavPoint>
             <NavPoint to={RootPath.Quiz}>Quiz</NavPoint>
             <NavPoint to={RootPath.Settings}>Settings</NavPoint>
